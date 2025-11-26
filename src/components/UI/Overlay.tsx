@@ -33,11 +33,13 @@ export default function Overlay() {
 
       <motion.div
         initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 0.9, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute top-24 md:top-32 left-1/2 -translate-x-1/2 text-center w-full text-[10px] md:text-2xl text-[#00A6FB] tracking-[0.4em] md:tracking-[0.8em] font-medium select-none z-50 whitespace-nowrap px-6"
+        className="absolute top-28 md:top-32 left-1/2 -translate-x-1/2 text-center w-full z-10"
       >
-        INTELLIGENCE IN MOTION
+        <p className="text-sm md:text-2xl text-[#00A6FB] tracking-[0.3em] md:tracking-[0.8em] font-semibold md:font-medium opacity-100 md:opacity-90 drop-shadow-[0_0_8px_rgba(0,166,251,0.6)] select-none">
+          INTELLIGENCE IN MOTION
+        </p>
       </motion.div>
 
       <div className="flex-grow"></div>
