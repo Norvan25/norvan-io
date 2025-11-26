@@ -18,51 +18,63 @@ export default function Overlay() {
         <StarField />
       </div>
 
-      <header className="flex justify-between items-center relative z-50">
-        <div className="pointer-events-auto">
-          <img
-            src="/norvan-logo.png"
-            alt="Norvan"
-            className="h-16 md:h-20 w-auto"
-          />
-        </div>
-        <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-500/20">
-          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+      <header className="flex justify-between items-start relative z-50">
+        <img
+          src="/norvan-logo.png"
+          alt="Norvan"
+          className="h-16 md:h-20 w-auto object-contain pointer-events-auto"
+        />
+
+        <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-500/20 backdrop-blur-sm">
+          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
           SYSTEM ONLINE
         </div>
       </header>
 
+      <div className="flex-grow"></div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-50">
+      <div className="flex flex-col items-center w-full gap-6 relative z-50">
 
-        <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 shadow-2xl shadow-black/50">
-          {DOCK_ITEMS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <motion.button
-                key={item.id}
-                whileHover={{ scale: 1.1, y: -5 }}
-                className="relative group w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/5 bg-gradient-to-b from-white/5 to-transparent hover:border-white/20 transition-colors"
-              >
-                <Icon style={{ color: item.color }} size={24} />
-
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 backdrop-blur px-3 py-1 rounded text-xs font-mono text-white whitespace-nowrap border border-white/10 pointer-events-none">
-                  {item.id.toUpperCase()} • {item.label}
-                </div>
-              </motion.button>
-            );
-          })}
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-transparent border border-[#00A6FB] text-[#00A6FB] font-bold tracking-[0.15em] text-sm rounded-sm hover:bg-[#00A6FB] hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,166,251,0.2)] hover:shadow-[0_0_30px_rgba(0,166,251,0.6)]"
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0.8, y: 0 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="text-[10px] md:text-xs text-[#00A6FB] tracking-[0.8em] font-mono select-none"
         >
-          INITIALIZE PROTOCOL
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-        </motion.button>
+          INTELLIGENCE IN MOTION
+        </motion.div>
 
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-between w-full gap-8">
+
+          <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 mx-auto md:mx-0 shadow-2xl shadow-black/50">
+            {DOCK_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.button
+                  key={item.id}
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  className="relative group w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/5 bg-gradient-to-b from-white/5 to-transparent hover:border-white/20 transition-colors"
+                >
+                  <Icon style={{ color: item.color }} size={24} />
+
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 backdrop-blur px-3 py-1 rounded text-xs font-mono text-white whitespace-nowrap border border-white/10 pointer-events-none">
+                    {item.id.toUpperCase()} • {item.label}
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-transparent border border-[#00A6FB] text-[#00A6FB] font-bold tracking-[0.15em] text-sm rounded-sm hover:bg-[#00A6FB] hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,166,251,0.2)] hover:shadow-[0_0_30px_rgba(0,166,251,0.6)]"
+          >
+            INITIALIZE PROTOCOL
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </motion.button>
+
+        </div>
       </div>
     </div>
   );
