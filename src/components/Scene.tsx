@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, Float, PerspectiveCamera } from "@react-three/drei";
 import { Tesseract } from "./3d/Tesseract";
 import { StarField } from "./3d/StarField";
+import { ParticleText } from "./3d/ParticleText";
 
 export default function Scene() {
   return (
@@ -17,6 +18,8 @@ export default function Scene() {
       <Float speed={2} rotationIntensity={1} floatIntensity={1}>
         <Tesseract />
       </Float>
+
+      <ParticleText />
 
       <StarField />
     </Canvas>

@@ -30,11 +30,6 @@ export default function Overlay() {
         </div>
       </header>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 opacity-5 select-none">
-        <h1 className="text-[20vw] font-black text-white leading-none tracking-tighter">
-          NORVAN
-        </h1>
-      </div>
 
       <div className="flex flex-col md:flex-row items-end md:items-center justify-between gap-8">
 
