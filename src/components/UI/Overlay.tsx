@@ -1,75 +1,68 @@
-import { useState } from 'react';
-import { Box, Database, Cpu, Network, Zap } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { motion } from "framer-motion";
+import { Activity, Layers, Zap, Globe, Cpu, ArrowRight } from "lucide-react";
 
-const dockItems = [
-  { id: 'x', icon: Box, label: 'Dimension X' },
-  { id: 'y', icon: Database, label: 'Dimension Y' },
-  { id: 'z', icon: Cpu, label: 'Dimension Z' },
-  { id: 'w', icon: Network, label: 'Dimension W' },
-  { id: 'v', icon: Zap, label: 'Dimension V' },
+const DOCK_ITEMS = [
+  { id: 'norX', label: 'Insight', color: '#007FFF', icon: Activity },
+  { id: 'norY', label: 'Architecture', color: '#7F4FC9', icon: Layers },
+  { id: 'norZ', label: 'Expression', color: '#F28500', icon: Zap },
+  { id: 'norW', label: 'Enablement', color: '#009E60', icon: Globe },
+  { id: 'norV', label: 'Execution', color: '#00A6FB', icon: Cpu },
 ];
 
 export default function Overlay() {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
   return (
-    <div className="fixed inset-0 pointer-events-none">
-      <header className="absolute top-0 left-0 right-0 p-8 pointer-events-auto">
-        <img
-          src="/norvan-logo.png"
-          alt="Norvan"
-          className="h-12 w-auto"
-        />
+    <div className="fixed inset-0 z-50 pointer-events-none flex flex-col justify-between p-6 md:p-12">
+
+      <header className="flex justify-between items-start">
+        <div className="flex flex-col">
+          <h1 className="text-3xl font-bold tracking-[0.2em] text-white pointer-events-auto cursor-default">
+            NORVAN
+          </h1>
+          <p className="text-xs text-[#00A6FB] tracking-[0.4em] mt-1">INTELLIGENCE IN MOTION</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-500/20">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+          SYSTEM ONLINE
+        </div>
       </header>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 pointer-events-auto">
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 shadow-2xl">
-          <div className="flex items-end gap-3">
-            {dockItems.map((item) => {
-              const Icon = item.icon;
-              const isHovered = hoveredId === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  onMouseEnter={() => setHoveredId(item.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  className={cn(
-                    'relative flex items-center justify-center',
-                    'w-14 h-14 rounded-xl',
-                    'bg-norvan-cyan/10 border border-norvan-cyan/20',
-                    'hover:bg-norvan-cyan/20 hover:border-norvan-cyan/40',
-                    'transition-all duration-300 ease-out',
-                    'group',
-                    isHovered && 'scale-125 -translate-y-2'
-                  )}
-                  aria-label={item.label}
-                >
-                  <Icon
-                    className={cn(
-                      'w-6 h-6 text-norvan-cyan transition-colors',
-                      isHovered && 'text-norvan-accent'
-                    )}
-                  />
-
-                  {isHovered && (
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                      <div className="bg-norvan-navy/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-norvan-cyan/20">
-                        <span className="text-xs font-medium text-norvan-cyan">
-                          {item.label}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 opacity-5 select-none">
+        <h1 className="text-[20vw] font-black text-white leading-none tracking-tighter">
+          NORVAN
+        </h1>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-norvan-navy to-transparent pointer-events-none" />
+      <div className="flex flex-col md:flex-row items-end md:items-center justify-between gap-8">
+
+        <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 mx-auto md:mx-0 shadow-2xl shadow-black/50">
+          {DOCK_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <motion.button
+                key={item.id}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="relative group w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/5 bg-gradient-to-b from-white/5 to-transparent hover:border-white/20 transition-colors"
+              >
+                <Icon style={{ color: item.color }} size={24} />
+
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 backdrop-blur px-3 py-1 rounded text-xs font-mono text-white whitespace-nowrap border border-white/10 pointer-events-none">
+                  {item.id.toUpperCase()} • {item.label}
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-[#00A6FB] text-black font-bold tracking-wider text-sm rounded-sm hover:bg-[#33bfff] transition-colors shadow-[0_0_30px_rgba(0,166,251,0.3)] hover:shadow-[0_0_50px_rgba(0,166,251,0.5)]"
+        >
+          INITIALIZE PROTOCOL
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </motion.button>
+
+      </div>
     </div>
   );
 }
