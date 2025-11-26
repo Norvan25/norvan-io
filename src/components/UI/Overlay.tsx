@@ -35,7 +35,7 @@ export default function Overlay() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 0.9, y: 0 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute top-24 md:top-32 left-1/2 -translate-x-1/2 text-center w-full text-[10px] md:text-2xl text-[#00A6FB] tracking-[0.4em] md:tracking-[0.8em] font-medium select-none z-50"
+        className="absolute top-24 md:top-32 left-1/2 -translate-x-1/2 text-center w-full text-[10px] md:text-2xl text-[#00A6FB] tracking-[0.4em] md:tracking-[0.8em] font-medium select-none z-50 whitespace-nowrap px-6"
       >
         INTELLIGENCE IN MOTION
       </motion.div>
