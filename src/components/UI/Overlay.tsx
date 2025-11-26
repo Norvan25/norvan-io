@@ -14,11 +14,15 @@ export default function Overlay() {
     <div className="fixed inset-0 z-50 pointer-events-none flex flex-col justify-between p-6 md:p-12">
 
       <header className="flex justify-between items-start">
-        <div className="flex flex-col">
-          <h1 className="text-3xl font-bold tracking-[0.2em] text-white pointer-events-auto cursor-default">
-            NORVAN
-          </h1>
-          <p className="text-xs text-[#00A6FB] tracking-[0.4em] mt-1">INTELLIGENCE IN MOTION</p>
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <img
+            src="/norvan-logo.png"
+            alt="Norvan"
+            className="h-10 md:h-12 w-auto"
+          />
+          <div className="flex flex-col">
+            <p className="text-xs text-[#00A6FB] tracking-[0.4em]">INTELLIGENCE IN MOTION</p>
+          </div>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-500/20">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
