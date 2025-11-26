@@ -33,9 +33,9 @@ export default function Overlay() {
       </header>
 
 
-      <div className="flex flex-col md:flex-row items-end md:items-center justify-between gap-8 relative z-50">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-50">
 
-        <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 mx-auto md:mx-0 shadow-2xl shadow-black/50">
+        <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 shadow-2xl shadow-black/50">
           {DOCK_ITEMS.map((item) => {
             const Icon = item.icon;
             return (
