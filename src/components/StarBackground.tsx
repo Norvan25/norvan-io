@@ -11,7 +11,7 @@ export default function StarBackground() {
 
     let width = 0, height = 0, cx = 0, cy = 0;
 
-    const STAR_COUNT = 600;
+    const STAR_COUNT = 780;
     const SPEED = 0.02;
     const COLORS = ["#00A6FB", "#ffffff", "#7F4FC9", "#F28500"];
 
