@@ -53,7 +53,7 @@ export default function StarBackground() {
         const x2d = star.x * scale * width * 0.5 + cx;
         const y2d = star.y * scale * height * 0.5 + cy;
 
-        const size = (1 - star.z) * 3.5;
+        const size = (1 - star.z) * 1.5;
 
         if (x2d >= 0 && x2d <= width && y2d >= 0 && y2d <= height) {
           ctx.beginPath();
