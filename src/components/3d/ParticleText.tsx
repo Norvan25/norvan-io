@@ -1,105 +1,71 @@
-import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { useRef, useMemo } from 'react';
+import { useFrame, useLoader } from '@react-three/fiber';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import * as THREE from 'three';
 
 export function ParticleText() {
   const pointsRef = useRef<THREE.Points>(null);
 
-  const particles = useMemo(() => {
-    const particleCount = 3000;
-    const positions = new Float32Array(particleCount * 3);
-    const originalPositions = new Float32Array(particleCount * 3);
+  const font = useLoader(
+    FontLoader,
+    'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json'
+  );
 
-    const textWidth = 7;
-    const textHeight = 2;
+  const { geometry, originalPositions } = useMemo(() => {
+    const textGeo = new TextGeometry('NORVAN', {
+      font,
+      size: 4,
+      height: 0.5,
+      curveSegments: 12,
+      bevelEnabled: false,
+    });
 
-    for (let i = 0; i < particleCount; i++) {
-      const x = (Math.random() - 0.5) * textWidth;
-      const y = (Math.random() - 0.5) * textHeight;
-      const z = (Math.random() - 0.5) * 0.5;
+    textGeo.center();
 
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = z;
-      originalPositions[i * 3] = x;
-      originalPositions[i * 3 + 1] = y;
-      originalPositions[i * 3 + 2] = z;
-    }
+    const positionAttribute = textGeo.attributes.position;
+    const positions = new Float32Array(positionAttribute.array);
+    const originalPos = new Float32Array(positionAttribute.array);
 
-    return { positions, originalPositions };
-  }, []);
+    const pointsGeo = new THREE.BufferGeometry();
+    pointsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    return { geometry: pointsGeo, originalPositions: originalPos };
+  }, [font]);
 
   useFrame((state) => {
     if (!pointsRef.current) return;
 
     const time = state.clock.elapsedTime;
     const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
-    const original = particles.originalPositions;
 
     for (let i = 0; i < positions.length; i += 3) {
-      const x = original[i];
-      const y = original[i + 1];
+      const x = originalPositions[i];
+      const y = originalPositions[i + 1];
 
-      positions[i] = x + Math.sin(time * 0.5 + x * 0.5) * 0.08;
-      positions[i + 1] = y + Math.cos(time * 0.3 + y * 0.5) * 0.08;
-      positions[i + 2] = original[i + 2] + Math.sin(time * 0.5 + x * 0.3 + y * 0.3) * 0.05;
+      positions[i] = x + Math.sin(time * 0.5 + x * 0.3) * 0.1;
+      positions[i + 1] = y + Math.cos(time * 0.3 + y * 0.4) * 0.1;
+      positions[i + 2] = originalPositions[i + 2] + Math.sin(time * 0.5 + x * 0.2 + y * 0.2) * 0.08;
     }
 
     pointsRef.current.geometry.attributes.position.needsUpdate = true;
+
+    pointsRef.current.rotation.y = Math.sin(time * 0.1) * 0.05;
   });
 
   return (
-    <group position={[0, 0, -5]}>
+    <group position={[0, 0, -8]}>
       <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={particles.positions.length / 3}
-            array={particles.positions}
-            itemSize={3}
-          />
-        </bufferGeometry>
+        <primitive object={geometry} attach="geometry" />
         <pointsMaterial
-          size={0.025}
+          size={0.04}
           color="#00A6FB"
           transparent
-          opacity={0.4}
+          opacity={0.5}
           sizeAttenuation
           blending={THREE.AdditiveBlending}
         />
       </points>
-
-      <Text
-        fontSize={2.5}
-        letterSpacing={0.05}
-        anchorX="center"
-        anchorY="middle"
-        position={[0, 0, 0]}
-      >
-        NORVAN
-        <meshBasicMaterial
-          color="#00A6FB"
-          transparent
-          opacity={0.05}
-          wireframe
-        />
-      </Text>
-
-      <Text
-        fontSize={2.5}
-        letterSpacing={0.05}
-        anchorX="center"
-        anchorY="middle"
-        position={[0, 0, -0.2]}
-      >
-        NORVAN
-        <meshBasicMaterial
-          color="#00A6FB"
-          transparent
-          opacity={0.02}
-        />
-      </Text>
     </group>
   );
 }
