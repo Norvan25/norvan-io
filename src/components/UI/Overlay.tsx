@@ -18,16 +18,13 @@ export default function Overlay() {
         <StarField />
       </div>
 
-      <header className="flex justify-between items-start relative z-50">
-        <div className="flex items-center gap-3 pointer-events-auto">
+      <header className="flex justify-between items-center relative z-50">
+        <div className="pointer-events-auto">
           <img
             src="/norvan-logo.png"
             alt="Norvan"
-            className="h-10 md:h-12 w-auto"
+            className="h-16 md:h-20 w-auto"
           />
-          <div className="flex flex-col">
-            <p className="text-xs text-[#00A6FB] tracking-[0.4em]">INTELLIGENCE IN MOTION</p>
-          </div>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-500/20">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
@@ -60,7 +57,7 @@ export default function Overlay() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-[#00A6FB] text-black font-bold tracking-wider text-sm rounded-sm hover:bg-[#33bfff] transition-colors shadow-[0_0_30px_rgba(0,166,251,0.3)] hover:shadow-[0_0_50px_rgba(0,166,251,0.5)]"
+          className="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-transparent border border-[#00A6FB] text-[#00A6FB] font-bold tracking-[0.15em] text-sm rounded-sm hover:bg-[#00A6FB] hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,166,251,0.2)] hover:shadow-[0_0_30px_rgba(0,166,251,0.6)]"
         >
           INITIALIZE PROTOCOL
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
