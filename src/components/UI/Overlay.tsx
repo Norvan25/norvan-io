@@ -31,50 +31,45 @@ export default function Overlay() {
         </div>
       </header>
 
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 0.9, y: 0 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute top-24 md:top-32 left-1/2 -translate-x-1/2 text-center w-full text-[10px] md:text-2xl text-[#00A6FB] tracking-[0.4em] md:tracking-[0.8em] font-medium select-none z-50"
+      >
+        INTELLIGENCE IN MOTION
+      </motion.div>
+
       <div className="flex-grow"></div>
 
-      <div className="flex flex-col items-center w-full gap-6 relative z-50">
+      <div className="flex flex-col md:flex-row items-center md:items-end justify-between w-full gap-8 relative z-50">
+        <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 mx-auto md:mx-0 shadow-2xl shadow-black/50">
+          {DOCK_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <motion.button
+                key={item.id}
+                whileHover={{ scale: 1.1, y: -5 }}
+                className="relative group w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/5 bg-gradient-to-b from-white/5 to-transparent hover:border-white/20 transition-colors"
+              >
+                <Icon style={{ color: item.color }} size={24} />
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 0.8, y: 0 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="text-[10px] md:text-xs text-[#00A6FB] tracking-[0.8em] font-mono select-none"
-        >
-          INTELLIGENCE IN MOTION
-        </motion.div>
-
-        <div className="flex flex-col md:flex-row items-center md:items-end justify-between w-full gap-8">
-
-          <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 mx-auto md:mx-0 shadow-2xl shadow-black/50">
-            {DOCK_ITEMS.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  className="relative group w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border border-white/5 bg-gradient-to-b from-white/5 to-transparent hover:border-white/20 transition-colors"
-                >
-                  <Icon style={{ color: item.color }} size={24} />
-
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 backdrop-blur px-3 py-1 rounded text-xs font-mono text-white whitespace-nowrap border border-white/10 pointer-events-none">
-                    {item.id.toUpperCase()} • {item.label}
-                  </div>
-                </motion.button>
-              );
-            })}
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="pointer-events-auto group flex items-center gap-3 px-8 py-4 bg-transparent border border-[#00A6FB] text-[#00A6FB] font-bold tracking-[0.15em] text-sm rounded-sm hover:bg-[#00A6FB] hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,166,251,0.2)] hover:shadow-[0_0_30px_rgba(0,166,251,0.6)]"
-          >
-            INITIALIZE PROTOCOL
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </motion.button>
-
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 backdrop-blur px-3 py-1 rounded text-xs font-mono text-white whitespace-nowrap border border-white/10 pointer-events-none">
+                  {item.id.toUpperCase()} • {item.label}
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="pointer-events-auto group flex items-center gap-3 px-6 py-3 bg-black/20 backdrop-blur-md border border-[#00A6FB]/50 text-[#00A6FB] font-light tracking-[0.2em] text-xs md:text-sm rounded-md hover:bg-[#00A6FB]/10 hover:border-[#00A6FB] hover:shadow-[0_0_20px_rgba(0,166,251,0.3)] transition-all duration-500"
+        >
+          INITIALIZE PROTOCOL
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </motion.button>
       </div>
     </div>
   );
