@@ -48,7 +48,7 @@ export default function StarField() {
         backgroundStars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          size: Math.random() * 1.5 + 0.5,
+          size: (Math.random() * 1.5 + 0.5) * 0.85,
           opacity: Math.random() * 0.5 + 0.2,
           twinkleSpeed: Math.random() * 0.03 + 0.01,
           twinkleOffset: Math.random() * Math.PI * 2
