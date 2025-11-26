@@ -1,13 +1,11 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment, Float, PerspectiveCamera } from "@react-three/drei";
 import { Tesseract } from "./3d/Tesseract";
-import { StarField } from "./3d/StarField";
-import { ParticleText } from "./3d/ParticleText";
 
 export default function Scene() {
   return (
     <Canvas className="w-full h-full" dpr={[1, 2]}>
-      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+      <PerspectiveCamera makeDefault position={[0, 0, 6]} />
 
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} color="#00A6FB" intensity={2} />
@@ -19,9 +17,6 @@ export default function Scene() {
         <Tesseract />
       </Float>
 
-      <ParticleText />
-
-      <StarField />
     </Canvas>
   );
 }
