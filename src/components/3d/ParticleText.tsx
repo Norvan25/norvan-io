@@ -1,21 +1,24 @@
 import { useRef, useMemo } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
+import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import * as THREE from 'three';
 
 export function ParticleText() {
   const pointsRef = useRef<THREE.Points>(null);
+  const { viewport } = useThree();
 
   const font = useLoader(
     FontLoader,
     'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json'
   );
 
+  const scale = Math.min(1, viewport.width / 35);
+
   const { geometry, originalPositions } = useMemo(() => {
     const textGeo = new TextGeometry('NORVAN', {
       font,
-      size: 4,
+      size: 6,
       height: 0.5,
       curveSegments: 12,
       bevelEnabled: false,
@@ -54,15 +57,16 @@ export function ParticleText() {
   });
 
   return (
-    <group position={[0, 0, -15]} scale={1.5}>
+    <group position={[0, 0, -12]} scale={[scale, scale, scale]}>
       <points ref={pointsRef}>
         <primitive object={geometry} attach="geometry" />
         <pointsMaterial
-          size={0.08}
+          size={0.15}
           color="#00A6FB"
           transparent
-          opacity={0.6}
+          opacity={0.4}
           sizeAttenuation
+          depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </points>
