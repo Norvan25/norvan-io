@@ -18,7 +18,7 @@ export default function Overlay() {
         <StarField />
       </div>
 
-      <header className="flex justify-between items-start relative z-50">
+      <header className="flex justify-between items-start w-full relative z-50">
         <img
           src="/norvan-logo.png"
           alt="Norvan"
@@ -35,9 +35,9 @@ export default function Overlay() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute top-28 md:top-32 left-1/2 -translate-x-1/2 text-center w-full z-10"
+        className="absolute top-28 md:top-32 left-0 w-full text-center z-10 pointer-events-none"
       >
-        <p className="text-sm md:text-2xl text-[#00A6FB] tracking-[0.3em] md:tracking-[0.8em] font-semibold md:font-medium opacity-100 md:opacity-90 drop-shadow-[0_0_8px_rgba(0,166,251,0.6)] select-none">
+        <p className="text-sm md:text-2xl text-[#00A6FB] tracking-[0.3em] md:tracking-[0.8em] font-semibold md:font-medium opacity-100 md:opacity-90 drop-shadow-[0_0_8px_rgba(0,166,251,0.6)]">
           INTELLIGENCE IN MOTION
         </p>
       </motion.div>
