@@ -54,14 +54,14 @@ export function ParticleText() {
   });
 
   return (
-    <group position={[0, 0, -8]}>
+    <group position={[0, 0, -15]} scale={1.5}>
       <points ref={pointsRef}>
         <primitive object={geometry} attach="geometry" />
         <pointsMaterial
-          size={0.04}
+          size={0.08}
           color="#00A6FB"
           transparent
-          opacity={0.5}
+          opacity={0.6}
           sizeAttenuation
           blending={THREE.AdditiveBlending}
         />
