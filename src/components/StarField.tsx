@@ -184,6 +184,7 @@ export default function StarField() {
     }
 
     resize();
+    render();
     window.addEventListener('resize', resize);
 
     return () => {

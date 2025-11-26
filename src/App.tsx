@@ -17,8 +17,8 @@ function App() {
         </Suspense>
       </div>
 
-      {/* 3. The UI Layer (HUD & Dock) */}
-      <div className="relative z-20 pointer-events-none">
+      {/* 3. Star Convergence Animation */}
+      <div className="absolute inset-0 z-30 pointer-events-none">
         <Overlay />
       </div>
 
