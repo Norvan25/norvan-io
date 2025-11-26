@@ -11,9 +11,9 @@ export default function StarBackground() {
 
     let width = 0, height = 0, cx = 0, cy = 0;
 
-    const STAR_COUNT = 400;
-    const SPEED = 0.05;
-    const COLORS = ["#00A6FB", "#ffffff", "#7F4FC9"];
+    const STAR_COUNT = 600;
+    const SPEED = 0.02;
+    const COLORS = ["#00A6FB", "#ffffff", "#7F4FC9", "#F28500"];
 
     const stars: { x: number; y: number; z: number; color: string }[] = [];
 
@@ -53,12 +53,14 @@ export default function StarBackground() {
         const x2d = star.x * scale * width * 0.5 + cx;
         const y2d = star.y * scale * height * 0.5 + cy;
 
-        const size = (1 - star.z) * 2.5;
+        const size = (1 - star.z) * 3.5;
 
-        ctx.beginPath();
-        ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
-        ctx.fill();
+        if (x2d >= 0 && x2d <= width && y2d >= 0 && y2d <= height) {
+          ctx.beginPath();
+          ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
+          ctx.fillStyle = star.color;
+          ctx.fill();
+        }
       });
 
       requestAnimationFrame(animate);
@@ -75,8 +77,8 @@ export default function StarBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.6 }}
+      className="fixed inset-0 w-full h-full pointer-events-none"
+      style={{ zIndex: 0 }}
     />
   );
 }
