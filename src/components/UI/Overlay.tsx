@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Activity, Layers, Zap, Globe, Cpu, ArrowRight } from "lucide-react";
+import StarField from "../StarField";
 
 const DOCK_ITEMS = [
   { id: 'norX', label: 'Insight', color: '#007FFF', icon: Activity },
@@ -13,7 +14,11 @@ export default function Overlay() {
   return (
     <div className="fixed inset-0 z-50 pointer-events-none flex flex-col justify-between p-6 md:p-12">
 
-      <header className="flex justify-between items-start">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <StarField />
+      </div>
+
+      <header className="flex justify-between items-start relative z-10">
         <div className="flex items-center gap-3 pointer-events-auto">
           <img
             src="/norvan-logo.png"
@@ -31,7 +36,7 @@ export default function Overlay() {
       </header>
 
 
-      <div className="flex flex-col md:flex-row items-end md:items-center justify-between gap-8">
+      <div className="flex flex-col md:flex-row items-end md:items-center justify-between gap-8 relative z-10">
 
         <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-2 md:gap-4 mx-auto md:mx-0 shadow-2xl shadow-black/50">
           {DOCK_ITEMS.map((item) => {
