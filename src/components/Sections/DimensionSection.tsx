@@ -8,9 +8,10 @@ interface DimensionProps {
   color: string;
   Icon: LucideIcon;
   index: number;
+  modules: string[];
 }
 
-export default function DimensionSection({ id, label, desc, color, Icon, index }: DimensionProps) {
+export default function DimensionSection({ id, label, desc, color, Icon, index, modules }: DimensionProps) {
   const isEven = index % 2 === 0;
 
   return (
@@ -41,6 +42,23 @@ export default function DimensionSection({ id, label, desc, color, Icon, index }
             <p className="mt-8 text-lg md:text-xl text-gray-300 font-light leading-relaxed max-w-xl mx-auto md:mx-0">
               {desc}
             </p>
+
+            <div className="mt-8 flex flex-wrap gap-3 justify-center md:justify-start">
+              {modules.map((mod) => (
+                <div
+                  key={mod}
+                  className="px-4 py-2 rounded border backdrop-blur-sm text-xs font-bold tracking-widest uppercase transition-all hover:scale-105 cursor-default"
+                  style={{
+                    borderColor: `${color}40`,
+                    backgroundColor: `${color}05`,
+                    color: color,
+                    boxShadow: `0 0 10px ${color}10`
+                  }}
+                >
+                  {mod}
+                </div>
+              ))}
+            </div>
 
             <button
               className="mt-12 group flex items-center gap-3 px-8 py-4 bg-transparent border border-white/20 text-white tracking-[0.2em] text-sm rounded-sm hover:bg-white/5 transition-all mx-auto md:mx-0"

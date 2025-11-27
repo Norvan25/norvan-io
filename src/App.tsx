@@ -7,11 +7,46 @@ import StarField from './components/StarField';
 import { Activity, Layers, Zap, Globe, Cpu } from 'lucide-react';
 
 const DIMENSIONS = [
-  { id: 'NORX', label: 'STRATEGY', color: '#007FFF', Icon: Activity, desc: "The Diagnostic Engine. We scan, analyze, and reveal the hidden friction in your business." },
-  { id: 'NORY', label: 'ARCHITECTURE', color: '#7F4FC9', Icon: Layers, desc: "The Structural Blueprint. We design the systems, workflows, and hierarchies for scale." },
-  { id: 'NORZ', label: 'EXPRESSION', color: '#F28500', Icon: Zap, desc: "The Brand Frequency. We amplify your signal to cut through the market noise." },
-  { id: 'NORW', label: 'ENABLEMENT', color: '#009E60', Icon: Globe, desc: "The Knowledge Base. We train your teams and install the culture of intelligence." },
-  { id: 'NORV', label: 'EXECUTION', color: '#00A6FB', Icon: Cpu, desc: "The Production Line. We deploy the tools, bots, and automations that do the work." },
+  {
+    id: 'NORX',
+    label: 'STRATEGY',
+    color: '#007FFF',
+    Icon: Activity,
+    desc: "The Diagnostic Engine. We scan, analyze, and reveal the hidden friction in your business.",
+    modules: ['NORDATA', 'NORSCAN', 'NORMAP', 'NORAUDIT']
+  },
+  {
+    id: 'NORY',
+    label: 'ARCHITECTURE',
+    color: '#7F4FC9',
+    Icon: Layers,
+    desc: "The Structural Blueprint. We design the systems, workflows, and hierarchies for scale.",
+    modules: ['NORFLOW', 'NORSTACK', 'NORGRID', 'NORHUB']
+  },
+  {
+    id: 'NORZ',
+    label: 'EXPRESSION',
+    color: '#F28500',
+    Icon: Zap,
+    desc: "The Brand Frequency. We amplify your signal to cut through the market noise.",
+    modules: ['NORBRAND', 'NORCOPY', 'NORVOICE', 'NORWAVE']
+  },
+  {
+    id: 'NORW',
+    label: 'ENABLEMENT',
+    color: '#009E60',
+    Icon: Globe,
+    desc: "The Knowledge Base. We train your teams and install the culture of intelligence.",
+    modules: ['NORACADEMY', 'NORLEARN', 'NORGUIDE', 'NORPATH']
+  },
+  {
+    id: 'NORV',
+    label: 'EXECUTION',
+    color: '#00A6FB',
+    Icon: Cpu,
+    desc: "The Production Line. We deploy the tools, bots, and automations that do the work.",
+    modules: ['NORBOT', 'NORFLOW', 'NORENGINE', 'NORPULSE']
+  },
 ];
 
 function App() {
