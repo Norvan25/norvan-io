@@ -1,30 +1,37 @@
 import React, { Suspense } from 'react';
-import Scene from './components/Scene';
+import Tesseract from './components/3d/Tesseract';
 import Overlay from './components/UI/Overlay';
-import StarBackground from './components/StarBackground';
-import StarField from './components/StarField';
 
 function App() {
   return (
     <div className="relative w-full h-screen bg-[#0A1628] overflow-hidden text-white">
 
-      {/* 1. Animated Star Background (Warp Speed) */}
-      <StarBackground />
+      {/* LAYER 1: The Background Mesh (Restored) */}
+      <div
+        className="fixed inset-0 z-0 opacity-40 pointer-events-none"
+        style={{
+          backgroundImage: "url('/background-mesh.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      />
 
-      {/* 2. Particle Text Animation */}
-      <div className="absolute inset-0 z-0">
-        <StarField />
-      </div>
-
-      {/* 3. The 3D Engine (The Tesseract) */}
+      {/* LAYER 2: The Tesseract Engine */}
       <div className="absolute inset-0 z-10">
-        <Suspense fallback={null}>
-          <Scene />
-        </Suspense>
+        <Tesseract />
       </div>
 
-      {/* 4. UI Overlay */}
-      <div className="absolute inset-0 z-30 pointer-events-none">
+      {/* LAYER 3: Glass/Vignette Overlay (The "Glassy" Look) */}
+      <div
+        className="absolute inset-0 z-20 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at center, transparent 20%, rgba(10, 22, 40, 0.4) 80%, rgba(10, 22, 40, 0.8) 100%)',
+          boxShadow: 'inset 0 0 100px rgba(0, 166, 251, 0.05)'
+        }}
+      />
+
+      {/* LAYER 4: The UI (HUD) */}
+      <div className="relative z-30 pointer-events-none">
         <Overlay />
       </div>
 
