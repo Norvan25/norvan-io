@@ -63,9 +63,9 @@ export default function IntelligenceText() {
         wrapperRef.current.style.opacity = progress > 0 ? String(Math.min(1, progress * 2)) : '0';
 
         if (progress > 0) {
-          const spans = wrapperRef.current.children;
-          for(let i=0; i<spans.length; i++) {
-            const span = spans[i] as HTMLElement;
+          const allSpans = wrapperRef.current.querySelectorAll('span[id^="char-"]');
+          for(let i=0; i<allSpans.length; i++) {
+            const span = allSpans[i] as HTMLElement;
             span.style.color = getCharColor(i, progress);
             span.style.textShadow = getCharGlow(i, progress, time);
           }
@@ -79,13 +79,30 @@ export default function IntelligenceText() {
   }, []);
 
   return (
-    <div className="absolute bottom-[15%] left-0 w-full flex justify-center z-20 pointer-events-none">
-      <div ref={wrapperRef} className="flex justify-center font-sans font-semibold tracking-wide opacity-0" style={{ fontSize: 'clamp(1.2rem, 4vw, 3rem)' }}>
-        {CHARS.map((char, i) => (
-          <span key={i} className="transition-colors duration-100" style={{ minWidth: char === ' ' ? '0.3em' : 'auto' }}>
-            {char}
-          </span>
-        ))}
+    <div className="absolute top-[18%] md:top-[22%] left-0 w-full flex justify-center z-20 pointer-events-none px-4">
+      <div
+        ref={wrapperRef}
+        className="flex flex-wrap justify-center gap-x-3 md:gap-x-0 font-sans font-semibold tracking-wide opacity-0 text-center leading-tight"
+        style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}
+      >
+        <div className="flex">
+          {CHARS.slice(0, 12).map((char, i) => (
+            <span key={i} id={`char-${i}`} className="transition-colors duration-100">
+              {char}
+            </span>
+          ))}
+        </div>
+
+        <div className="hidden md:block w-[0.5em]"></div>
+        <div className="block md:hidden w-full h-0"></div>
+
+        <div className="flex">
+          {CHARS.slice(13).map((char, i) => (
+            <span key={i+13} id={`char-${i+13}`} className="transition-colors duration-100">
+              {char}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
