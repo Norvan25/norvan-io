@@ -19,20 +19,18 @@ interface DimensionProps {
 }
 
 export default function DimensionSection({ id, label, desc, color, iconPath, index, modules }: DimensionProps) {
-  const isTextRight = index % 2 !== 0;
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 border-t border-white/5">
 
       <div className="absolute inset-0 pointer-events-none transition-colors duration-500"
-        style={{ background: `radial-gradient(circle at ${isTextRight ? '20%' : '80%'} 50%, ${color}15 0%, ${color}02 40%, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle at 20% 50%, ${color}15 0%, ${color}02 40%, transparent 70%)` }}
       />
 
-      <div className={`container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12 md:gap-32 ${isTextRight ? 'md:flex-row-reverse' : ''}`}>
+      <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row-reverse items-center gap-12 md:gap-32">
 
         <div className="flex-1 text-center md:text-left">
           <motion.div
-            initial={{ opacity: 0, x: isTextRight ? 50 : -50 }}
+            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-20%" }}
