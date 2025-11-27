@@ -18,15 +18,6 @@ export default function Overlay() {
         <StarField />
       </div>
 
-      <div className="absolute top-28 left-0 w-full flex flex-col items-center justify-center gap-1 z-20 block md:hidden pointer-events-none">
-        <span className="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#4bdbd3] to-[#00A6FB] drop-shadow-[0_0_10px_rgba(75,219,211,0.4)]">
-          INTELLIGENCE
-        </span>
-        <span className="text-xl font-bold tracking-[0.5em] text-[#00A6FB] opacity-80">
-          IN MOTION
-        </span>
-      </div>
-
       <header className="flex justify-between items-start w-full relative z-50">
         <img
           src="/norvan-logo.png"
