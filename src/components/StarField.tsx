@@ -81,11 +81,16 @@ export default function StarField() {
     }
 
     function getTextPixels(text: string) {
+      const isMobile = width < 768;
+
+      if (isMobile) {
+        return [];
+      }
+
       const offscreen = document.createElement('canvas');
       const offCtx = offscreen.getContext('2d');
       if (!offCtx) return [];
 
-      const isMobile = width < 768;
       offscreen.width = width;
       offscreen.height = height;
 
@@ -93,16 +98,9 @@ export default function StarField() {
       offCtx.textAlign = 'center';
       offCtx.textBaseline = 'middle';
 
-      if (isMobile) {
-        const fontSize = Math.min(width * 0.11, 60);
-        offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
-        offCtx.fillText("INTELLIGENCE", width / 2, height * 0.15);
-        offCtx.fillText("IN MOTION", width / 2, height * 0.20);
-      } else {
-        const fontSize = Math.min(width * 0.035, 60);
-        offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
-        offCtx.fillText("INTELLIGENCE IN MOTION", width / 2, height * 0.18);
-      }
+      const fontSize = Math.min(width * 0.035, 60);
+      offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
+      offCtx.fillText("INTELLIGENCE IN MOTION", width / 2, height * 0.18);
 
       const imageData = offCtx.getImageData(0, 0, width, height);
       const pixels = [];
