@@ -1,6 +1,6 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Float, Environment, PerspectiveCamera, Edges } from "@react-three/drei";
+import { Float, Environment, PerspectiveCamera, Edges, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 
 function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
@@ -12,6 +12,7 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.generateMipmaps = false;
   }, [texture]);
 
   useFrame((state, delta) => {
@@ -23,14 +24,18 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
 
   return (
     <group>
-      <mesh ref={meshRef}>
-        <boxGeometry args={[3.5, 3.5, 3.5]} />
+      <RoundedBox
+        ref={meshRef}
+        args={[3.5, 3.5, 3.5]}
+        radius={0.25}
+        smoothness={4}
+      >
         <meshPhysicalMaterial
           color={color}
           map={texture}
           emissiveMap={texture}
           emissive="#ffffff"
-          emissiveIntensity={1.5}
+          emissiveIntensity={2}
           transparent={true}
           opacity={0.9}
           transmission={0.2}
@@ -38,8 +43,8 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
           roughness={0.2}
           side={THREE.FrontSide}
         />
-        <Edges scale={1.0} threshold={15} color={color} linewidth={2} />
-      </mesh>
+        <Edges scale={1.0} threshold={30} color={color} linewidth={2} />
+      </RoundedBox>
     </group>
   );
 }
