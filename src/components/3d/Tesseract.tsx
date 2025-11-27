@@ -12,14 +12,26 @@ export default function Tesseract() {
     let width: number, height: number, centerX: number, centerY: number, scale: number;
 
     function resize() {
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const rectWidth = window.innerWidth;
+      const rectHeight = window.innerHeight;
+
+      canvas.width = rectWidth * dpr;
+      canvas.height = rectHeight * dpr;
+
+      canvas.style.width = `${rectWidth}px`;
+      canvas.style.height = `${rectHeight}px`;
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      width = rectWidth;
+      height = rectHeight;
       centerX = width / 2;
       centerY = height / 2;
 
       const isMobile = width < 768;
       const multiplier = isMobile ? 0.30 : 0.22;
-
       scale = Math.min(width, height) * multiplier;
     }
 
