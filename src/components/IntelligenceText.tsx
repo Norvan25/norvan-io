@@ -80,38 +80,20 @@ export default function IntelligenceText() {
   }, []);
 
   return (
-    <div className="absolute top-[15%] md:top-[18%] left-0 w-full flex justify-center z-20 pointer-events-none px-4">
+    <div
+      className="absolute left-0 w-full flex justify-center z-20 pointer-events-none px-4"
+      style={{ top: 'calc(18% - 24px)' }}
+    >
       <div
         ref={wrapperRef}
-        className="flex flex-wrap justify-center font-sans font-semibold tracking-wide opacity-0 text-center leading-tight"
-        style={{ fontSize: 'clamp(1.1rem, 3.5vw, 2.5rem)' }}
+        className="flex justify-center whitespace-nowrap font-sans font-semibold tracking-wide opacity-0 text-center leading-tight"
+        style={{ fontSize: 'clamp(0.8rem, 3.5vw, 2.5rem)' }}
       >
-        <div className="flex">
-          {CHARS.slice(0, 12).map((char, i) => (
-            <span key={i} id={`char-${i}`} className="transition-colors duration-100">
-              {char}
-            </span>
-          ))}
-        </div>
-
-        <div className="hidden md:block w-[0.6em]"></div>
-        <div className="block md:hidden w-full h-0"></div>
-
-        <div className="flex">
-          {CHARS.slice(13, 15).map((char, i) => (
-            <span key={i+13} id={`char-${i+13}`} className="transition-colors duration-100">
-              {char}
-            </span>
-          ))}
-
-          <div className="w-[0.4em]"></div>
-
-          {CHARS.slice(16).map((char, i) => (
-            <span key={i+16} id={`char-${i+16}`} className="transition-colors duration-100">
-              {char}
-            </span>
-          ))}
-        </div>
+        {CHARS.map((char, i) => (
+          <span key={i} id={`char-${i}`} className="transition-colors duration-100" style={{ minWidth: char === ' ' ? '0.3em' : 'auto' }}>
+            {char}
+          </span>
+        ))}
       </div>
     </div>
   );
