@@ -66,8 +66,9 @@ export default function IntelligenceText() {
           const allSpans = wrapperRef.current.querySelectorAll('span[id^="char-"]');
           for(let i=0; i<allSpans.length; i++) {
             const span = allSpans[i] as HTMLElement;
-            span.style.color = getCharColor(i, progress);
-            span.style.textShadow = getCharGlow(i, progress, time);
+            const charIndex = parseInt(span.id.split('-')[1]);
+            span.style.color = getCharColor(charIndex, progress);
+            span.style.textShadow = getCharGlow(charIndex, progress, time);
           }
         }
       }
