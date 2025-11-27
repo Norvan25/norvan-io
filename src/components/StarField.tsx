@@ -71,8 +71,8 @@ export default function StarField() {
         targetX: 0,
         targetY: 0,
         hasTarget: true,
-        size: Math.random() * 1 + 0.5,
-        color: '#ffffff',
+        size: Math.random() * 1.2 + 0.5,
+        color: '#00A6FB',
         twinkleSpeed: Math.random() * 0.05 + 0.02,
         twinkleOffset: Math.random() * Math.PI * 2,
         velocityX: (Math.random() - 0.5) * 2,
@@ -85,7 +85,8 @@ export default function StarField() {
       const offCtx = offscreen.getContext('2d');
       if (!offCtx) return [];
 
-      const fontSize = Math.min(width * 0.05, 80);
+      const isMobile = width < 768;
+      const fontSize = isMobile ? width * 0.09 : Math.min(width * 0.035, 60);
       offscreen.width = width;
       offscreen.height = height;
 
@@ -93,11 +94,11 @@ export default function StarField() {
       offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
       offCtx.textAlign = 'center';
       offCtx.textBaseline = 'middle';
-      offCtx.fillText(text, width / 2, height * 0.25);
+      offCtx.fillText(text, width / 2, height * 0.18);
 
       const imageData = offCtx.getImageData(0, 0, width, height);
       const pixels = [];
-      const density = 4;
+      const density = isMobile ? 3 : 5;
 
       for (let y = 0; y < height; y += density) {
         for (let x = 0; x < width; x += density) {
@@ -178,7 +179,7 @@ export default function StarField() {
 
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = p.color;
         ctx.globalAlpha = 1;
         ctx.fill();
       });
