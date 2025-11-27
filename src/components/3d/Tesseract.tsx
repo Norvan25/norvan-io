@@ -16,7 +16,11 @@ export default function Tesseract() {
       height = canvas.height = canvas.offsetHeight;
       centerX = width / 2;
       centerY = height / 2;
-      scale = Math.min(width, height) * 0.35;
+
+      const isMobile = width < 768;
+      const multiplier = isMobile ? 0.30 : 0.22;
+
+      scale = Math.min(width, height) * multiplier;
     }
 
     const COLORS = {
