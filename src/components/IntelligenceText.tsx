@@ -20,7 +20,7 @@ export default function IntelligenceText() {
       const wavePos = progress * 1.8 - charNorm * 0.6;
 
       if (wavePos <= 0) return COLORS.grey;
-      if (wavePos >= 1.2) return index >= 13 ? COLORS.norV : '#ffffff';
+      if (wavePos >= 1.2) return index >= 16 ? COLORS.norV : '#ffffff';
 
       const phase = (wavePos * 4) % 4;
       if (phase < 1) return COLORS.norX;
@@ -37,8 +37,8 @@ export default function IntelligenceText() {
 
       if (wavePos >= 1.2) {
         const breathe = 0.4 + Math.sin(time * 2) * 0.3;
-        const size = index >= 13 ? 25 : 20;
-        return `0 0 ${size * breathe}px ${COLORS.norV}`;
+        const size = index >= 16 ? 25 : 15;
+        return `0 0 ${size * breathe}px ${index >= 16 ? COLORS.norV : '#ffffff'}`;
       }
 
       const phase = (wavePos * 4) % 4;
@@ -79,11 +79,11 @@ export default function IntelligenceText() {
   }, []);
 
   return (
-    <div className="absolute top-[18%] md:top-[22%] left-0 w-full flex justify-center z-20 pointer-events-none px-4">
+    <div className="absolute top-[15%] md:top-[18%] left-0 w-full flex justify-center z-20 pointer-events-none px-4">
       <div
         ref={wrapperRef}
-        className="flex flex-wrap justify-center gap-x-3 md:gap-x-0 font-sans font-semibold tracking-wide opacity-0 text-center leading-tight"
-        style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}
+        className="flex flex-wrap justify-center font-sans font-semibold tracking-wide opacity-0 text-center leading-tight"
+        style={{ fontSize: 'clamp(1.1rem, 3.5vw, 2.5rem)' }}
       >
         <div className="flex">
           {CHARS.slice(0, 12).map((char, i) => (
@@ -93,12 +93,20 @@ export default function IntelligenceText() {
           ))}
         </div>
 
-        <div className="hidden md:block w-[0.5em]"></div>
+        <div className="hidden md:block w-[0.6em]"></div>
         <div className="block md:hidden w-full h-0"></div>
 
         <div className="flex">
-          {CHARS.slice(13).map((char, i) => (
+          {CHARS.slice(13, 15).map((char, i) => (
             <span key={i+13} id={`char-${i+13}`} className="transition-colors duration-100">
+              {char}
+            </span>
+          ))}
+
+          <div className="w-[0.4em]"></div>
+
+          {CHARS.slice(16).map((char, i) => (
+            <span key={i+16} id={`char-${i+16}`} className="transition-colors duration-100">
               {char}
             </span>
           ))}
