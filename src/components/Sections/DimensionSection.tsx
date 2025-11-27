@@ -67,7 +67,12 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
                       />
                     </div>
                     <span className="text-base font-mono font-bold tracking-wide text-white">
-                      {mod.name}
+                      <span style={{ color: color }}>
+                        {mod.name.substring(0, 3)}
+                      </span>
+                      <span>
+                        {mod.name.substring(3)}
+                      </span>
                     </span>
                   </div>
 
