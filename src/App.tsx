@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   return (
-    <div className="relative w-full bg-[#0A1628] text-white selection:bg-[#00A6FB] selection:text-black">
+    <div className="relative w-full min-h-screen bg-[#0A1628] text-white selection:bg-[#00A6FB] selection:text-black">
 
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
@@ -47,22 +47,24 @@ function App() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0A1628_100%)] opacity-80" />
       </div>
 
-      <div className="relative h-screen sticky top-0 z-10 overflow-hidden">
-        <div className="absolute inset-0 z-10">
-          <Tesseract />
+      <div className="relative z-10 flex flex-col">
+
+        <div className="relative w-full h-screen overflow-hidden">
+          <div className="absolute inset-0 z-10">
+            <Tesseract />
+          </div>
+          <IntelligenceText />
+          <Overlay />
         </div>
-        <IntelligenceText />
-        <Overlay />
-      </div>
 
-      <div className="relative z-40 bg-[#0A1628]/85 backdrop-blur-xl border-t border-white/10 shadow-[0_-50px_100px_rgba(0,0,0,0.8)]">
+        <div className="relative w-full bg-[#0A1628]/85 backdrop-blur-xl border-t border-white/10">
+          {DIMENSIONS.map((dim, i) => (
+            <DimensionSection key={dim.id} index={i} {...dim} />
+          ))}
 
-        {DIMENSIONS.map((dim, i) => (
-          <DimensionSection key={dim.id} index={i} {...dim} />
-        ))}
-
-        <div className="py-24 text-center border-t border-white/10 relative z-50">
-          <h3 className="text-2xl font-mono text-gray-500">SYSTEM ARCHITECTURE END</h3>
+          <div className="py-24 text-center border-t border-white/10">
+            <h3 className="text-2xl font-mono text-gray-500">SYSTEM ARCHITECTURE END</h3>
+          </div>
         </div>
 
       </div>
