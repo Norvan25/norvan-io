@@ -8,86 +8,92 @@ interface DimensionProps {
   color: string;
   iconPath: string;
   index: number;
-  modules: string[];
+  modules: { name: string; icon: string }[];
 }
 
 export default function DimensionSection({ id, label, desc, color, iconPath, index, modules }: DimensionProps) {
-  const isEven = index % 2 === 0;
+  const isTextRight = index % 2 !== 0;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 border-t border-white/5">
 
-      <div
-        className="absolute inset-0 pointer-events-none transition-colors duration-500"
-        style={{
-          background: `radial-gradient(circle at ${isEven ? '90%' : '10%'} 50%, ${color}20 0%, ${color}05 40%, transparent 70%)`
-        }}
+      <div className="absolute inset-0 pointer-events-none transition-colors duration-500"
+        style={{ background: `radial-gradient(circle at ${isTextRight ? '20%' : '80%'} 50%, ${color}15 0%, ${color}02 40%, transparent 70%)` }}
       />
 
-      <div className={`container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12 md:gap-24 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+      <div className={`container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12 md:gap-32 ${isTextRight ? 'md:flex-row-reverse' : ''}`}>
 
         <div className="flex-1 text-center md:text-left">
           <motion.div
-            initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+            initial={{ opacity: 0, x: isTextRight ? 50 : -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-20%" }}
           >
-            <h2 className="text-[12vw] md:text-[8rem] font-black tracking-tighter leading-none opacity-10 select-none absolute -top-16 md:-top-32 left-0 w-full" style={{ color: color }}>
-              {id}
-            </h2>
-            <div className="relative">
-              <h3 className="text-3xl md:text-6xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
+            <div className="relative mb-8">
+              <h2 className="text-[8vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-20 select-none absolute -top-12 md:-top-20 left-0 w-full" style={{ color: color }}>
+                {id}
+              </h2>
+              <h3 className="relative text-3xl md:text-5xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
                 {label}
               </h3>
-              <div className="h-1 w-24 mt-4 mb-8 mx-auto md:mx-0" style={{ backgroundColor: color }} />
+              <div className="h-1 w-20 mt-4 mx-auto md:mx-0" style={{ backgroundColor: color }} />
             </div>
-            <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed max-w-xl mx-auto md:mx-0 drop-shadow-md">
+
+            <p className="text-lg text-gray-300 font-light leading-relaxed mb-10">
               {desc}
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3 justify-center md:justify-start">
+            <div className="grid grid-cols-2 gap-4 mb-12">
               {modules.map((mod) => (
-                <div
-                  key={mod}
-                  className="px-4 py-2 rounded border border-white/10 bg-white/5 text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase transition-all hover:scale-105 cursor-default"
-                  style={{
-                    borderColor: `${color}40`,
-                    color: color,
-                    boxShadow: `0 0 10px ${color}05`
-                  }}
-                >
-                  {mod}
+                <div key={mod.name} className="flex items-center gap-3 p-3 rounded bg-white/5 border border-white/10 hover:border-white/20 transition-colors group cursor-default">
+                  <div className="w-8 h-8 rounded bg-black/20 flex items-center justify-center p-1.5 relative">
+                    <img
+                      src={mod.icon}
+                      alt={mod.name}
+                      className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'block';
+                      }}
+                    />
+                    <div className="w-1.5 h-1.5 rounded-full absolute hidden" style={{ backgroundColor: color }} />
+                  </div>
+
+                  <span className="text-xs font-mono font-bold tracking-wider text-gray-300 group-hover:text-white uppercase">
+                    {mod.name}
+                  </span>
                 </div>
               ))}
             </div>
 
             <button
-              className="mt-12 group flex items-center gap-3 px-8 py-4 bg-black/30 backdrop-blur-md border border-white/20 text-white tracking-[0.2em] text-sm rounded hover:bg-white/10 transition-all mx-auto md:mx-0"
-              style={{ borderColor: `${color}80` }}
+              className="group flex items-center gap-3 px-8 py-3 bg-transparent border border-white/20 text-white tracking-[0.2em] text-xs font-bold rounded hover:bg-white/5 transition-all mx-auto md:mx-0"
+              style={{ borderColor: `${color}60` }}
             >
-              <span style={{ color: color, fontWeight: 'bold' }}>EXPLORE</span> {id}
+              <span style={{ color: color }}>EXPLORE</span> {id}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: color }} />
             </button>
           </motion.div>
         </div>
 
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center relative">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
+            initial={{ scale: 0.8, opacity: 0, rotate: -20 }}
             whileInView={{ scale: 1, opacity: 1, rotate: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]"
           >
-            <div className="absolute inset-0 border border-dashed rounded-full animate-[spin_30s_linear_infinite]"
-                 style={{ borderColor: `${color}40`, width: '100%', height: '100%' }} />
+            <div className="absolute inset-0 border border-dashed rounded-full animate-[spin_40s_linear_infinite]"
+                 style={{ borderColor: `${color}30` }} />
 
             <img
               src={iconPath}
-              alt={label}
-              className="w-[280px] h-[280px] md:w-[350px] md:h-[350px] object-contain drop-shadow-[0_0_50px_rgba(0,0,0,0.5)]"
-              style={{ filter: `drop-shadow(0 0 20px ${color}40)` }}
+              alt={id}
+              className="absolute inset-0 w-full h-full object-contain p-12 drop-shadow-[0_0_60px_rgba(0,0,0,0.6)]"
+              style={{ filter: `drop-shadow(0 0 30px ${color}30)` }}
             />
           </motion.div>
         </div>

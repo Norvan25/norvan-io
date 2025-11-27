@@ -12,7 +12,12 @@ const DIMENSIONS = [
     color: '#007FFF',
     iconPath: '/NorAudit.svg',
     desc: "The Diagnostic Engine. We scan, analyze, and reveal the hidden friction in your business.",
-    modules: ['NORDATA', 'NORSCAN', 'NORMAP', 'NORAUDIT']
+    modules: [
+      { name: 'NORDATA', icon: '/NorAudit.svg' },
+      { name: 'NORSCAN', icon: '/NorAudit.svg' },
+      { name: 'NORMAP', icon: '/NorAudit.svg' },
+      { name: 'NORAUDIT', icon: '/NorAudit.svg' }
+    ]
   },
   {
     id: 'NORY',
@@ -20,7 +25,12 @@ const DIMENSIONS = [
     color: '#7F4FC9',
     iconPath: '/NorCoach.svg',
     desc: "The Structural Blueprint. We design the systems, workflows, and hierarchies for scale.",
-    modules: ['NORFLOW', 'NORSTACK', 'NORGRID', 'NORHUB']
+    modules: [
+      { name: 'NORFLOW', icon: '/NorCoach.svg' },
+      { name: 'NORSTACK', icon: '/NorCoach.svg' },
+      { name: 'NORGRID', icon: '/NorCoach.svg' },
+      { name: 'NORHUB', icon: '/NorCoach.svg' }
+    ]
   },
   {
     id: 'NORZ',
@@ -28,7 +38,12 @@ const DIMENSIONS = [
     color: '#F28500',
     iconPath: '/NorBrand.svg',
     desc: "The Brand Frequency. We amplify your signal to cut through the market noise.",
-    modules: ['NORBRAND', 'NORCOPY', 'NORVOICE', 'NORWAVE']
+    modules: [
+      { name: 'NORBRAND', icon: '/NorBrand.svg' },
+      { name: 'NORCOPY', icon: '/NorBrand.svg' },
+      { name: 'NORVOICE', icon: '/NorBrand.svg' },
+      { name: 'NORWAVE', icon: '/NorBrand.svg' }
+    ]
   },
   {
     id: 'NORW',
@@ -36,7 +51,12 @@ const DIMENSIONS = [
     color: '#009E60',
     iconPath: '/NorCast.svg',
     desc: "The Knowledge Base. We train your teams and install the culture of intelligence.",
-    modules: ['NORACADEMY', 'NORLEARN', 'NORGUIDE', 'NORPATH']
+    modules: [
+      { name: 'NORACADEMY', icon: '/NorCast.svg' },
+      { name: 'NORLEARN', icon: '/NorCast.svg' },
+      { name: 'NORGUIDE', icon: '/NorCast.svg' },
+      { name: 'NORPATH', icon: '/NorCast.svg' }
+    ]
   },
   {
     id: 'NORV',
@@ -44,7 +64,12 @@ const DIMENSIONS = [
     color: '#00A6FB',
     iconPath: '/NorBot.svg',
     desc: "The Production Line. We deploy the tools, bots, and automations that do the work.",
-    modules: ['NORBOT', 'NORFLOW', 'NORENGINE', 'NORPULSE']
+    modules: [
+      { name: 'NORBOT', icon: '/NorBot.svg' },
+      { name: 'NORFLOW', icon: '/NorBot.svg' },
+      { name: 'NORENGINE', icon: '/NorBot.svg' },
+      { name: 'NORPULSE', icon: '/NorBot.svg' }
+    ]
   },
 ];
 
