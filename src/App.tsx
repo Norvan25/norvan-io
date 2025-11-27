@@ -1,19 +1,32 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import Tesseract from './components/3d/Tesseract';
 import Overlay from './components/UI/Overlay';
 import IntelligenceText from './components/IntelligenceText';
 
 function App() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: (e.clientY / window.innerHeight) * 2 - 1
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
   return (
     <div className="relative w-full h-screen bg-[#0A1628] overflow-hidden text-white">
 
       {/* LAYER 1: The Background Mesh (Restored) */}
       <div
-        className="fixed inset-0 z-0 opacity-70 pointer-events-none"
+        className="fixed inset-0 z-0 opacity-70 pointer-events-none transition-transform duration-100 ease-out"
         style={{
           backgroundImage: "url('/background-mesh.png')",
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -20}px) scale(1.05)`
         }}
       />
 

@@ -33,7 +33,7 @@ export default function Overlay() {
 
       <div className="flex-grow"></div>
 
-      <div className="flex flex-col items-center w-full gap-8">
+      <div className="flex flex-col items-center w-full gap-8 mb-12">
         <div className="flex flex-col md:flex-row items-end md:items-center justify-between w-full gap-8 relative z-50">
 
           <div className="relative mx-auto md:mx-0">
@@ -69,6 +69,12 @@ export default function Overlay() {
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </motion.button>
         </div>
+      </div>
+
+      {/* SCROLL INDICATOR */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-40 pointer-events-none opacity-60">
+        <span className="text-[9px] tracking-[0.3em] text-[#00A6FB]">SCROLL</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-[#00A6FB] to-transparent animate-pulse" />
       </div>
     </div>
   );
