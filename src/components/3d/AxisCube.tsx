@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Float, Environment, PerspectiveCamera, Edges, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
@@ -7,6 +7,7 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
   const meshRef = useRef<THREE.Group>(null);
 
   const texture = useLoader(THREE.TextureLoader, iconPath);
+
   useMemo(() => {
     texture.anisotropy = 16;
     texture.minFilter = THREE.LinearFilter;
@@ -24,13 +25,10 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
 
   return (
     <group ref={meshRef}>
-      <mesh>
-        <roundedBoxGeometry args={[3.5, 3.5, 3.5, 4, 0.25]} />
+      <RoundedBox args={[3.5, 3.5, 3.5]} radius={0.25} smoothness={4}>
         <meshPhysicalMaterial
           color={color}
-          emissive={color}
-          emissiveIntensity={0.2}
-          transparent={true}
+          transparent
           opacity={0.15}
           transmission={0}
           roughness={0.1}
@@ -38,25 +36,22 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
           side={THREE.DoubleSide}
           depthWrite={false}
         />
-      </mesh>
+      </RoundedBox>
 
-      <mesh scale={1.01}>
-        <roundedBoxGeometry args={[3.5, 3.5, 3.5, 4, 0.25]} />
+      <RoundedBox args={[3.51, 3.51, 3.51]} radius={0.25} smoothness={4}>
         <meshBasicMaterial
           map={texture}
-          transparent={true}
-          opacity={1.0}
-          color="#ffffff"
+          transparent
+          opacity={1}
           side={THREE.FrontSide}
           toneMapped={false}
         />
-      </mesh>
+      </RoundedBox>
 
-      <mesh scale={1.02}>
-        <roundedBoxGeometry args={[3.5, 3.5, 3.5, 4, 0.25]} />
+      <RoundedBox args={[3.5, 3.5, 3.5]} radius={0.25} smoothness={4}>
         <meshBasicMaterial visible={false} />
-        <Edges scale={1.0} threshold={30} color={color} linewidth={2} />
-      </mesh>
+        <Edges threshold={30} color={color} linewidth={2} />
+      </RoundedBox>
     </group>
   );
 }
@@ -65,12 +60,14 @@ export default function AxisCube({ iconPath, color }: { iconPath: string; color:
   return (
     <div className="w-full h-full relative">
       <Canvas className="w-full h-full block" dpr={[1, 3]}>
-        <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+        <PerspectiveCamera makeDefault position={[0, 0, 9]} />
         <ambientLight intensity={1} />
         <Environment preset="city" />
 
         <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-          <CubeMesh iconPath={iconPath} color={color} />
+          <Suspense fallback={null}>
+            <CubeMesh iconPath={iconPath} color={color} />
+          </Suspense>
         </Float>
       </Canvas>
     </div>
