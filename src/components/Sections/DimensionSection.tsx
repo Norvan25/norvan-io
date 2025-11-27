@@ -26,9 +26,9 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
         style={{ background: `radial-gradient(circle at 20% 50%, ${color}15 0%, ${color}02 40%, transparent 70%)` }}
       />
 
-      <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row-reverse items-center gap-8 md:gap-32">
+      <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row-reverse items-center gap-16 md:gap-32">
 
-        <div className="flex-1 text-center md:text-left w-full">
+        <div className="flex-1 text-center md:text-left w-full z-20">
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -87,7 +87,7 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
           </motion.div>
         </div>
 
-        <div className="flex-1 flex justify-center items-center h-[280px] md:h-[500px] w-full max-w-[300px] md:max-w-[500px] mx-auto relative mt-8 md:mt-0">
+        <div className="flex-1 flex justify-center items-center h-[280px] md:h-[600px] w-full max-w-[300px] md:max-w-[500px] mx-auto relative mt-0 md:mt-0 z-10">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
