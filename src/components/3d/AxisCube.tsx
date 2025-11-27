@@ -4,7 +4,7 @@ import { Float, Environment, PerspectiveCamera, Edges, RoundedBox } from "@react
 import * as THREE from "three";
 
 function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<THREE.Group>(null);
 
   const texture = useLoader(THREE.TextureLoader, iconPath);
   useMemo(() => {
@@ -23,29 +23,40 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
   });
 
   return (
-    <group>
-      <RoundedBox
-        ref={meshRef}
-        args={[3.5, 3.5, 3.5]}
-        radius={0.25}
-        smoothness={4}
-      >
+    <group ref={meshRef}>
+      <mesh>
+        <roundedBoxGeometry args={[3.5, 3.5, 3.5, 4, 0.25]} />
         <meshPhysicalMaterial
           color={color}
-          map={texture}
-          emissiveMap={texture}
-          emissive="#ffffff"
-          emissiveIntensity={2}
+          emissive={color}
+          emissiveIntensity={0.2}
           transparent={true}
-          opacity={0.2}
+          opacity={0.15}
           transmission={0}
-          metalness={0.1}
           roughness={0.1}
+          metalness={0}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
+      </mesh>
+
+      <mesh scale={1.01}>
+        <roundedBoxGeometry args={[3.5, 3.5, 3.5, 4, 0.25]} />
+        <meshBasicMaterial
+          map={texture}
+          transparent={true}
+          opacity={1.0}
+          color="#ffffff"
+          side={THREE.FrontSide}
+          toneMapped={false}
+        />
+      </mesh>
+
+      <mesh scale={1.02}>
+        <roundedBoxGeometry args={[3.5, 3.5, 3.5, 4, 0.25]} />
+        <meshBasicMaterial visible={false} />
         <Edges scale={1.0} threshold={30} color={color} linewidth={2} />
-      </RoundedBox>
+      </mesh>
     </group>
   );
 }
