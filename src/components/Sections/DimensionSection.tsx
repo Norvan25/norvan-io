@@ -26,7 +26,7 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
         style={{ background: `radial-gradient(circle at 20% 50%, ${color}15 0%, ${color}02 40%, transparent 70%)` }}
       />
 
-      <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row-reverse items-center gap-16 md:gap-32">
+      <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row-reverse items-center gap-12 md:gap-32">
 
         <div className="flex-1 text-center md:text-left w-full z-20">
           <motion.div
@@ -35,19 +35,19 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, margin: "-20%" }}
           >
-            <div className="relative mb-6 md:mb-8">
-              <h2 className="text-[25vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-25 select-none absolute top-[-15%] md:-top-20 left-0 w-full uppercase" style={{ color: color }}>
+            <div className="relative mb-8 md:mb-12">
+              <h2 className="text-[25vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-25 select-none absolute top-0 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 md:-top-20 w-full uppercase" style={{ color: color }}>
                 {id}
               </h2>
-              <div className="relative mt-12 md:mt-0">
-                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
+              <div className="relative mt-24 md:mt-0">
+                <h3 className="text-4xl md:text-5xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
                   {label}
                 </h3>
-                <div className="h-1 w-16 md:w-20 mt-4 mx-auto md:mx-0" style={{ backgroundColor: color }} />
+                <div className="h-1 w-20 mt-4 mx-auto md:mx-0" style={{ backgroundColor: color }} />
               </div>
             </div>
 
-            <p className="text-base md:text-xl text-gray-300 font-light leading-relaxed mb-8 md:mb-10">
+            <p className="text-base md:text-xl text-gray-300 font-light leading-relaxed mb-10 md:mb-12">
               {desc}
             </p>
 
@@ -80,7 +80,7 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
             </div>
 
             <button
-              className="group flex items-center gap-3 px-6 md:px-8 py-3 md:py-4 bg-black/30 backdrop-blur-md border border-white/20 text-white tracking-[0.2em] text-xs font-bold rounded hover:bg-white/10 transition-all mx-auto md:mx-0"
+              className="group flex items-center gap-3 px-8 py-3 bg-black/30 backdrop-blur-md border border-white/20 text-white tracking-[0.2em] text-xs font-bold rounded hover:bg-white/10 transition-all mx-auto md:mx-0 mb-12 md:mb-0"
               style={{ borderColor: `${color}80` }}
             >
               <span style={{ color: color }}>EXPLORE</span> {id}
@@ -89,7 +89,7 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
           </motion.div>
         </div>
 
-        <div className="flex-1 flex justify-center items-center h-[280px] md:h-[600px] w-full max-w-[300px] md:max-w-[500px] mx-auto relative mt-0 md:mt-0 z-10">
+        <div className="w-full h-[350px] md:h-[500px] flex-none md:flex-1 relative z-10">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
