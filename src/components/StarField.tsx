@@ -54,7 +54,7 @@ export default function StarField() {
           twinkleOffset: Math.random() * Math.PI * 2
         });
       }
-      const targetPixels = getTextPixels('NORVAN');
+      const targetPixels = getTextPixels('INTELLIGENCE IN MOTION');
       for (let i = 0; i < targetPixels.length; i++) {
         const p = createParticle();
         p.targetX = targetPixels[i].x;
@@ -85,7 +85,7 @@ export default function StarField() {
       const offCtx = offscreen.getContext('2d');
       if (!offCtx) return [];
 
-      const fontSize = Math.min(width * 0.15, 180);
+      const fontSize = Math.min(width * 0.05, 80);
       offscreen.width = width;
       offscreen.height = height;
 
@@ -93,11 +93,11 @@ export default function StarField() {
       offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
       offCtx.textAlign = 'center';
       offCtx.textBaseline = 'middle';
-      offCtx.fillText(text, width / 2, height / 2);
+      offCtx.fillText(text, width / 2, height * 0.25);
 
       const imageData = offCtx.getImageData(0, 0, width, height);
       const pixels = [];
-      const density = 5;
+      const density = 4;
 
       for (let y = 0; y < height; y += density) {
         for (let x = 0; x < width; x += density) {
@@ -143,13 +143,16 @@ export default function StarField() {
       particles.forEach((p, i) => {
         let x, y;
         if (animationStarted && p.hasTarget) {
-          x = p.x + (p.targetX - p.x) * easedProgress;
-          y = p.y + (p.targetY - p.y) * easedProgress;
+          let targetX = p.targetX;
+          let targetY = p.targetY;
 
-          if (animationProgress >= 1) {
-            x += Math.sin(time * 2 + i * 0.1) * 1.5;
-            y += Math.cos(time * 1.5 + i * 0.1) * 1.5;
+          if (animationProgress > 0.8) {
+            const wave = Math.sin(time * 1.5 + targetX * 0.01) * 3;
+            targetY += wave;
           }
+
+          x = p.x + (targetX - p.x) * easedProgress;
+          y = p.y + (targetY - p.y) * easedProgress;
         } else {
           p.x += p.velocityX * 0.5;
           p.y += p.velocityY * 0.5;
