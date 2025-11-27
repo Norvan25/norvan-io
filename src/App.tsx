@@ -4,14 +4,13 @@ import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
 import DimensionSection from './components/Sections/DimensionSection';
 import StarField from './components/StarField';
-import { Activity, Layers, Zap, Globe, Cpu } from 'lucide-react';
 
 const DIMENSIONS = [
   {
     id: 'NORX',
     label: 'STRATEGY',
     color: '#007FFF',
-    Icon: Activity,
+    iconPath: '/NorAudit.svg',
     desc: "The Diagnostic Engine. We scan, analyze, and reveal the hidden friction in your business.",
     modules: ['NORDATA', 'NORSCAN', 'NORMAP', 'NORAUDIT']
   },
@@ -19,7 +18,7 @@ const DIMENSIONS = [
     id: 'NORY',
     label: 'ARCHITECTURE',
     color: '#7F4FC9',
-    Icon: Layers,
+    iconPath: '/NorCoach.svg',
     desc: "The Structural Blueprint. We design the systems, workflows, and hierarchies for scale.",
     modules: ['NORFLOW', 'NORSTACK', 'NORGRID', 'NORHUB']
   },
@@ -27,7 +26,7 @@ const DIMENSIONS = [
     id: 'NORZ',
     label: 'EXPRESSION',
     color: '#F28500',
-    Icon: Zap,
+    iconPath: '/NorBrand.svg',
     desc: "The Brand Frequency. We amplify your signal to cut through the market noise.",
     modules: ['NORBRAND', 'NORCOPY', 'NORVOICE', 'NORWAVE']
   },
@@ -35,7 +34,7 @@ const DIMENSIONS = [
     id: 'NORW',
     label: 'ENABLEMENT',
     color: '#009E60',
-    Icon: Globe,
+    iconPath: '/NorCast.svg',
     desc: "The Knowledge Base. We train your teams and install the culture of intelligence.",
     modules: ['NORACADEMY', 'NORLEARN', 'NORGUIDE', 'NORPATH']
   },
@@ -43,7 +42,7 @@ const DIMENSIONS = [
     id: 'NORV',
     label: 'EXECUTION',
     color: '#00A6FB',
-    Icon: Cpu,
+    iconPath: '/NorBot.svg',
     desc: "The Production Line. We deploy the tools, bots, and automations that do the work.",
     modules: ['NORBOT', 'NORFLOW', 'NORENGINE', 'NORPULSE']
   },
