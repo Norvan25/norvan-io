@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import AxisCube from '../3d/AxisCube';
 
 interface Module {
   name: string;
@@ -95,21 +96,13 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
 
         <div className="flex-1 flex justify-center relative">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, rotate: -20 }}
-            whileInView={{ scale: 1, opacity: 1, rotate: 0 }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
             viewport={{ once: true }}
             className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]"
           >
-            <div className="absolute inset-0 border border-dashed rounded-full animate-[spin_40s_linear_infinite]"
-                 style={{ borderColor: `${color}30` }} />
-
-            <img
-              src={iconPath}
-              alt={id}
-              className="absolute inset-0 w-full h-full object-contain p-12 drop-shadow-[0_0_60px_rgba(0,0,0,0.6)]"
-              style={{ filter: `drop-shadow(0 0 30px ${color}30)` }}
-            />
+            <AxisCube iconPath={iconPath} color={color} />
           </motion.div>
         </div>
 
