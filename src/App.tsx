@@ -8,7 +8,7 @@ function App() {
 
       {/* LAYER 1: The Background Mesh (Restored) */}
       <div
-        className="fixed inset-0 z-0 opacity-40 pointer-events-none"
+        className="fixed inset-0 z-0 opacity-70 pointer-events-none"
         style={{
           backgroundImage: "url('/background-mesh.png')",
           backgroundSize: 'cover',
