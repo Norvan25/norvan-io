@@ -8,15 +8,15 @@ import StarField from './components/StarField';
 const DIMENSIONS = [
   {
     id: 'NORX',
-    label: 'STRATEGY',
+    label: 'INSIGHT',
     color: '#007FFF',
     iconPath: '/NorAudit.svg',
-    desc: "The Diagnostic Engine. We scan, analyze, and reveal the hidden friction in your business.",
+    desc: "The AI audit layer that scans your business, uncovers inefficiencies, and pinpoints where ROI comes first.",
     modules: [
-      { name: 'NORDATA', icon: '/NorAudit.svg' },
-      { name: 'NORSCAN', icon: '/NorAudit.svg' },
-      { name: 'NORMAP', icon: '/NorAudit.svg' },
-      { name: 'NORAUDIT', icon: '/NorAudit.svg' }
+      { name: "NorData", icon: "/NorAudit.svg", desc: "Collects and unifies your company's data into one clean, structured source ready for AI." },
+      { name: "NorScan", icon: "/NorAudit.svg", desc: "Runs an AI diagnostic sweep to expose bottlenecks and hidden costs." },
+      { name: "NorSense", icon: "/NorAudit.svg", desc: "Uses AI pattern recognition to detect signals and anomalies humans miss." },
+      { name: "NorAudit", icon: "/NorAudit.svg", desc: "Delivers an AI-powered audit brief with prioritized ROI actions." }
     ]
   },
   {
@@ -24,12 +24,12 @@ const DIMENSIONS = [
     label: 'ARCHITECTURE',
     color: '#7F4FC9',
     iconPath: '/NorCoach.svg',
-    desc: "The Structural Blueprint. We design the systems, workflows, and hierarchies for scale.",
+    desc: "The AI architecture axis that designs workflows and automations to scale operations without friction.",
     modules: [
-      { name: 'NORFLOW', icon: '/NorCoach.svg' },
-      { name: 'NORSTACK', icon: '/NorCoach.svg' },
-      { name: 'NORGRID', icon: '/NorCoach.svg' },
-      { name: 'NORHUB', icon: '/NorCoach.svg' }
+      { name: "NorMap", icon: "/NorCoach.svg", desc: "Generates AI workflow blueprints, mapping journeys and operational flowcharts." },
+      { name: "NorFlow", icon: "/NorCoach.svg", desc: "Builds AI-powered automations with no-code / low-code tools." },
+      { name: "NorCore", icon: "/NorCoach.svg", desc: "Orchestrates the system logic layer, managing rules, triggers, and integrations." },
+      { name: "NorFrame", icon: "/NorCoach.svg", desc: "Provides AI-ready templates for rapid automation prototyping and scaling." }
     ]
   },
   {
@@ -37,38 +37,38 @@ const DIMENSIONS = [
     label: 'EXPRESSION',
     color: '#F28500',
     iconPath: '/NorBrand.svg',
-    desc: "The Brand Frequency. We amplify your signal to cut through the market noise.",
+    desc: "The AI expression axis that builds content engines, campaign logic, and omnichannel brand systems.",
     modules: [
-      { name: 'NORBRAND', icon: '/NorBrand.svg' },
-      { name: 'NORCOPY', icon: '/NorBrand.svg' },
-      { name: 'NORVOICE', icon: '/NorBrand.svg' },
-      { name: 'NORWAVE', icon: '/NorBrand.svg' }
+      { name: "NorBrand", icon: "/NorBrand.svg", desc: "Codifies brand voice, positioning, and narrative clarity into an AI-ready framework." },
+      { name: "NorCast", icon: "/NorCast.svg", desc: "Runs a dynamic campaign engine that powers omnichannel engagement flows." },
+      { name: "NorWave", icon: "/NorBrand.svg", desc: "Launch sequencer and promotion automation builder for intelligent GTM execution." },
+      { name: "NorGen", icon: "/NorBrand.svg", desc: "Creates AI-driven content (text, images, video) — fast, consistent, and on-brand." }
     ]
   },
   {
     id: 'NORW',
-    label: 'ENABLEMENT',
+    label: 'KNOWLEDGE & ENABLEMENT',
     color: '#009E60',
-    iconPath: '/NorCast.svg',
-    desc: "The Knowledge Base. We train your teams and install the culture of intelligence.",
+    iconPath: '/NorCoach.svg',
+    desc: "The AI enablement axis that transforms knowledge into adaptive training and performance systems.",
     modules: [
-      { name: 'NORACADEMY', icon: '/NorCast.svg' },
-      { name: 'NORLEARN', icon: '/NorCast.svg' },
-      { name: 'NORGUIDE', icon: '/NorCast.svg' },
-      { name: 'NORPATH', icon: '/NorCast.svg' }
+      { name: "NorTrain", icon: "/NorCoach.svg", desc: "Builds adaptive SOPs, onboarding, and knowledge bases that evolve with every project." },
+      { name: "NorCoach", icon: "/NorCoach.svg", desc: "Delivers AI-guided coaching for leaders and teams — personalized, data-driven, continuous." },
+      { name: "NorDNA", icon: "/NorCoach.svg", desc: "Maps talent data to align strengths, roles, and personalized growth paths." },
+      { name: "NorGuide", icon: "/NorCoach.svg", desc: "Creates modular courses, wikis, and playbooks that capture and scale expertise." }
     ]
   },
   {
     id: 'NORV',
-    label: 'EXECUTION',
+    label: 'EXECUTION & DEPLOYMENT',
     color: '#00A6FB',
     iconPath: '/NorBot.svg',
-    desc: "The Production Line. We deploy the tools, bots, and automations that do the work.",
+    desc: "The AI deployment axis that connects tools, automations, and data into live operational systems.",
     modules: [
-      { name: 'NORBOT', icon: '/NorBot.svg' },
-      { name: 'NORFLOW', icon: '/NorBot.svg' },
-      { name: 'NORENGINE', icon: '/NorBot.svg' },
-      { name: 'NORPULSE', icon: '/NorBot.svg' }
+      { name: "NorBot", icon: "/NorBot.svg", desc: "Automates workflows with AI agents that execute precise, repeatable operations across systems." },
+      { name: "NorVoice", icon: "/NorBot.svg", desc: "Builds chat and voice agents that handle service, sales, and automation in your brand's voice." },
+      { name: "NorCRM", icon: "/NorBot.svg", desc: "Centralizes customer data and automates predictive engagement for smarter, faster relationships." },
+      { name: "NorERP", icon: "/NorBot.svg", desc: "Connects HR, finance, logistics, and analytics into one adaptive, AI-driven operating layer." }
     ]
   },
 ];

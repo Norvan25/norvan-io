@@ -8,7 +8,7 @@ interface DimensionProps {
   color: string;
   iconPath: string;
   index: number;
-  modules: { name: string; icon: string }[];
+  modules: { name: string; icon: string; desc?: string }[];
 }
 
 export default function DimensionSection({ id, label, desc, color, iconPath, index, modules }: DimensionProps) {
