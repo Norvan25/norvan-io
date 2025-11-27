@@ -72,7 +72,7 @@ export default function StarField() {
         targetY: 0,
         hasTarget: true,
         size: Math.random() * 1.2 + 0.5,
-        color: '#00ffff',
+        color: '#4bdbd3',
         twinkleSpeed: Math.random() * 0.05 + 0.02,
         twinkleOffset: Math.random() * Math.PI * 2,
         velocityX: (Math.random() - 0.5) * 2,
@@ -168,7 +168,7 @@ export default function StarField() {
         if (size > 0.8) {
           const glowSize = size * 3;
           const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
-          glowGradient.addColorStop(0, "rgba(0, 255, 255, 0.8)");
+          glowGradient.addColorStop(0, "rgba(75, 219, 211, 0.8)");
           glowGradient.addColorStop(1, 'transparent');
           ctx.beginPath();
           ctx.arc(x, y, glowSize, 0, Math.PI * 2);
