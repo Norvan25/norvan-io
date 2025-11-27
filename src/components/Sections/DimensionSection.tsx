@@ -19,7 +19,7 @@ export default function DimensionSection({ id, label, desc, color, Icon, index }
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at ${isEven ? '80%' : '20%'} 50%, ${color}15 0%, transparent 60%)`
+          background: `radial-gradient(circle at ${isEven ? '70%' : '30%'} 50%, ${color}35 0%, ${color}08 40%, transparent 70%)`
         }}
       />
 

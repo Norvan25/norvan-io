@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Tesseract from './components/3d/Tesseract';
-import StarField from './components/StarField';
 import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
 import DimensionSection from './components/Sections/DimensionSection';
+import StarField from './components/StarField';
 import { Activity, Layers, Zap, Globe, Cpu } from 'lucide-react';
 
 const DIMENSIONS = [
@@ -33,18 +33,18 @@ function App() {
 
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
-          className="absolute inset-0 opacity-60 transition-transform duration-100 ease-out"
+          className="absolute inset-0 opacity-70"
           style={{
             backgroundImage: "url('/background-mesh.png')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -20}px) scale(1.05)`
+            transform: `translate(${mousePos.x * -15}px, ${mousePos.y * -15}px) scale(1.05)`
           }}
         />
 
         <StarField />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0A1628_100%)] opacity-80" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0A1628_100%)] opacity-60" />
       </div>
 
       <div className="relative z-10 flex flex-col">
@@ -57,14 +57,14 @@ function App() {
           <Overlay />
         </div>
 
-        <div className="relative w-full bg-[#0A1628]/85 backdrop-blur-xl border-t border-white/10">
+        <div className="relative w-full">
           {DIMENSIONS.map((dim, i) => (
             <DimensionSection key={dim.id} index={i} {...dim} />
           ))}
+        </div>
 
-          <div className="py-24 text-center border-t border-white/10">
-            <h3 className="text-2xl font-mono text-gray-500">SYSTEM ARCHITECTURE END</h3>
-          </div>
+        <div className="py-32 text-center relative z-10 bg-gradient-to-t from-[#0A1628] to-transparent">
+          <h3 className="text-xl font-mono text-gray-500 tracking-widest">SYSTEM END</h3>
         </div>
 
       </div>
