@@ -54,24 +54,24 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
               {modules.map((mod) => (
                 <div
                   key={mod.name}
-                  className="flex flex-col p-4 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/[0.07] group cursor-default"
-                  style={{ borderLeft: `2px solid ${color}40` }}
+                  className="flex flex-col p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/[0.08] group cursor-default"
+                  style={{ borderLeft: `3px solid ${color}60` }}
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 rounded bg-black/20 flex items-center justify-center p-1.5 shrink-0">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-10 h-10 shrink-0">
                       <img
                         src={mod.icon}
                         alt={mod.name}
-                        className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+                        className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity filter drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]"
                         onError={(e) => { e.currentTarget.style.display = 'none'; }}
                       />
                     </div>
-                    <span className="text-sm font-mono font-bold tracking-wider text-white uppercase">
+                    <span className="text-base font-mono font-bold tracking-wide text-white">
                       {mod.name}
                     </span>
                   </div>
 
-                  <p className="text-xs text-gray-400 font-light leading-relaxed pl-11">
+                  <p className="text-sm text-gray-200 font-normal leading-relaxed pl-14">
                     {mod.desc}
                   </p>
                 </div>
