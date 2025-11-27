@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Float, Environment, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
@@ -7,6 +7,12 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   const texture = useLoader(THREE.TextureLoader, iconPath);
+  useMemo(() => {
+    texture.anisotropy = 16;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.colorSpace = THREE.SRGBColorSpace;
+  }, [texture]);
 
   useFrame((state, delta) => {
     if (meshRef.current) {
@@ -24,24 +30,28 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
           map={texture}
           emissiveMap={texture}
           emissive={color}
-          emissiveIntensity={2}
-          transmission={0.6}
-          opacity={1}
-          metalness={0}
-          roughness={0}
-          thickness={2}
-          clearcoat={1}
+          emissiveIntensity={4}
           transparent={true}
+          opacity={0.1}
+          transmission={0.2}
+          metalness={0.1}
+          roughness={0}
+          thickness={1}
+          clearcoat={1}
+          side={THREE.DoubleSide}
+          depthWrite={false}
         />
       </mesh>
 
-      <mesh rotation={meshRef.current?.rotation}>
-        <boxGeometry args={[3.1, 3.1, 3.1]} />
+      <mesh ref={meshRef}>
+        <boxGeometry args={[3.05, 3.05, 3.05]} />
         <meshStandardMaterial
           color={color}
           wireframe
-          opacity={0.3}
+          opacity={0.5}
           transparent
+          emissive={color}
+          emissiveIntensity={2}
         />
       </mesh>
     </group>
@@ -50,7 +60,7 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
 
 export default function AxisCube({ iconPath, color }: { iconPath: string; color: string }) {
   return (
-    <Canvas className="w-full h-full" dpr={[1, 2]}>
+    <Canvas className="w-full h-full" dpr={[1, 3]}>
       <PerspectiveCamera makeDefault position={[0, 0, 6]} />
       <ambientLight intensity={1} />
       <Environment preset="city" />
