@@ -1,6 +1,6 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Float, Environment, PerspectiveCamera } from "@react-three/drei";
+import { Float, Environment, PerspectiveCamera, Edges } from "@react-three/drei";
 import * as THREE from "three";
 
 function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
@@ -9,7 +9,7 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
   const texture = useLoader(THREE.TextureLoader, iconPath);
   useMemo(() => {
     texture.anisotropy = 16;
-    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
     texture.colorSpace = THREE.SRGBColorSpace;
   }, [texture]);
@@ -22,37 +22,23 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
   });
 
   return (
-    <group scale={0.8}>
+    <group>
       <mesh ref={meshRef}>
-        <boxGeometry args={[3, 3, 3]} />
+        <boxGeometry args={[3.5, 3.5, 3.5]} />
         <meshPhysicalMaterial
           color={color}
           map={texture}
           emissiveMap={texture}
-          emissive={color}
-          emissiveIntensity={4}
+          emissive="#ffffff"
+          emissiveIntensity={1.5}
           transparent={true}
-          opacity={0.1}
+          opacity={0.9}
           transmission={0.2}
           metalness={0.1}
-          roughness={0}
-          thickness={1}
-          clearcoat={1}
-          side={THREE.DoubleSide}
-          depthWrite={false}
+          roughness={0.2}
+          side={THREE.FrontSide}
         />
-      </mesh>
-
-      <mesh ref={meshRef}>
-        <boxGeometry args={[3.05, 3.05, 3.05]} />
-        <meshStandardMaterial
-          color={color}
-          wireframe
-          opacity={0.5}
-          transparent
-          emissive={color}
-          emissiveIntensity={2}
-        />
+        <Edges scale={1.0} threshold={15} color={color} linewidth={2} />
       </mesh>
     </group>
   );
