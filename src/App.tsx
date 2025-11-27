@@ -2,6 +2,16 @@ import React, { Suspense, useState, useEffect } from 'react';
 import Tesseract from './components/3d/Tesseract';
 import Overlay from './components/UI/Overlay';
 import IntelligenceText from './components/IntelligenceText';
+import DimensionSection from './components/Sections/DimensionSection';
+import { Activity, Layers, Zap, Globe, Cpu } from 'lucide-react';
+
+const DIMENSIONS = [
+  { id: 'norX', label: 'Insight', desc: 'Strategic intelligence that reveals patterns, anticipates shifts, and illuminates pathways through complexity.', color: '#007FFF', Icon: Activity },
+  { id: 'norY', label: 'Architecture', desc: 'Structural frameworks that organize systems, define relationships, and create coherent operational models.', color: '#7F4FC9', Icon: Layers },
+  { id: 'norZ', label: 'Expression', desc: 'Creative execution that transforms concepts into tangible experiences, bridging vision and reality.', color: '#F28500', Icon: Zap },
+  { id: 'norW', label: 'Enablement', desc: 'Infrastructure and capabilities that empower action, amplify impact, and sustain momentum.', color: '#009E60', Icon: Globe },
+  { id: 'norV', label: 'Execution', desc: 'Disciplined delivery that transforms plans into outcomes through precision, speed, and adaptability.', color: '#00A6FB', Icon: Cpu },
+];
 
 function App() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -17,7 +27,7 @@ function App() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
   return (
-    <div className="relative w-full h-screen bg-[#0A1628] overflow-hidden text-white">
+    <div className="relative w-full min-h-screen bg-[#0A1628] text-white">
 
       {/* LAYER 1: The Background Mesh (Restored) */}
       <div
@@ -50,6 +60,21 @@ function App() {
       {/* LAYER 4: The UI (HUD) */}
       <div className="relative z-30 pointer-events-none">
         <Overlay />
+      </div>
+
+      {/* DIMENSION SECTIONS */}
+      <div className="relative z-30 bg-[#0A1628]">
+        {DIMENSIONS.map((dim, idx) => (
+          <DimensionSection
+            key={dim.id}
+            id={dim.id}
+            label={dim.label}
+            desc={dim.desc}
+            color={dim.color}
+            Icon={dim.Icon}
+            index={idx}
+          />
+        ))}
       </div>
 
     </div>
