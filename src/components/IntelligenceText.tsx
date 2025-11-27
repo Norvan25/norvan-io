@@ -1,122 +1,92 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
+const COLORS = {
+  norX: '#007fff', norY: '#7f4fc9', norZ: '#f28500', norW: '#009e60', norV: '#66d3fa', grey: '#2a2f40'
+};
+const TEXT = 'INTELLIGENCE IN MOTION';
+const CHARS = TEXT.split('');
+const TEXT_DELAY = 5;
+const TEXT_DURATION = 3;
 
 export default function IntelligenceText() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    let startTime: number | null = null;
+    let animId: number;
 
-    let width = 0, height = 0;
-    let particles: any[] = [];
-    let animationId: number;
-    let time = 0;
+    function getCharColor(index: number, progress: number) {
+      const charNorm = index / CHARS.length;
+      const wavePos = progress * 1.8 - charNorm * 0.6;
 
-    const COLORS = { primary: '#00A6FB' };
+      if (wavePos <= 0) return COLORS.grey;
+      if (wavePos >= 1.2) return index >= 13 ? COLORS.norV : '#ffffff';
 
-    function init() {
-      particles = [];
-      const targetPixels = getTextPixels();
-
-      for (let i = 0; i < targetPixels.length; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          targetX: targetPixels[i].x,
-          targetY: targetPixels[i].y,
-          size: Math.random() * 1.2 + 0.5,
-          color: COLORS.primary,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2
-        });
-      }
+      const phase = (wavePos * 4) % 4;
+      if (phase < 1) return COLORS.norX;
+      if (phase < 2) return COLORS.norY;
+      if (phase < 3) return COLORS.norZ;
+      return COLORS.norW;
     }
 
-    function getTextPixels() {
-      const offscreen = document.createElement('canvas');
-      const offCtx = offscreen.getContext('2d');
-      if (!offCtx) return [];
+    function getCharGlow(index: number, progress: number, time: number) {
+      const charNorm = index / CHARS.length;
+      const wavePos = progress * 1.8 - charNorm * 0.6;
 
-      offscreen.width = width;
-      offscreen.height = height;
+      if (wavePos <= 0) return 'none';
 
-      const isMobile = width < 768;
-
-      offCtx.fillStyle = '#fff';
-      offCtx.textAlign = 'center';
-      offCtx.textBaseline = 'middle';
-
-      if (isMobile) {
-        const fontSize = Math.min(width * 0.11, 55);
-        offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
-        offCtx.fillText("INTELLIGENCE", width / 2, height * 0.15);
-        offCtx.fillText("IN MOTION", width / 2, height * 0.21);
-      } else {
-        const fontSize = Math.min(width * 0.03, 45);
-        offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
-        offCtx.fillText("INTELLIGENCE IN MOTION", width / 2, height * 0.18);
+      if (wavePos >= 1.2) {
+        const breathe = 0.4 + Math.sin(time * 2) * 0.3;
+        const size = index >= 13 ? 25 : 20;
+        return `0 0 ${size * breathe}px ${COLORS.norV}`;
       }
 
-      const imageData = offCtx.getImageData(0, 0, width, height);
-      const pixels = [];
-      const density = isMobile ? 2 : 3;
+      const phase = (wavePos * 4) % 4;
+      let col = COLORS.norX;
+      if (phase >= 1 && phase < 2) col = COLORS.norY;
+      else if (phase >= 2 && phase < 3) col = COLORS.norZ;
+      else if (phase >= 3) col = COLORS.norW;
+      return `0 0 20px ${col}`;
+    }
 
-      for (let y = 0; y < height; y += density) {
-        for (let x = 0; x < width; x += density) {
-          const i = (y * width + x) * 4;
-          if (imageData.data[i + 3] > 128) {
-            pixels.push({ x, y });
+    function animate(timestamp: number) {
+      if (!startTime) startTime = timestamp;
+      const time = (timestamp - startTime) / 1000;
+
+      let progress = 0;
+      if (time > TEXT_DELAY) {
+        progress = Math.min(1, (time - TEXT_DELAY) / TEXT_DURATION);
+        progress = -(Math.cos(Math.PI * progress) - 1) / 2;
+      }
+
+      if (wrapperRef.current) {
+        wrapperRef.current.style.opacity = progress > 0 ? String(Math.min(1, progress * 2)) : '0';
+
+        if (progress > 0) {
+          const spans = wrapperRef.current.children;
+          for(let i=0; i<spans.length; i++) {
+            const span = spans[i] as HTMLElement;
+            span.style.color = getCharColor(i, progress);
+            span.style.textShadow = getCharGlow(i, progress, time);
           }
         }
       }
-      return pixels;
+      animId = requestAnimationFrame(animate);
     }
 
-    function render() {
-      if (!ctx || !canvas) return;
-      time += 0.016;
-      ctx.clearRect(0, 0, width, height);
-
-      particles.forEach(p => {
-        const progress = Math.min(1, time * 0.8);
-        const ease = 1 - Math.pow(1 - progress, 3);
-
-        let cx = p.x + (p.targetX - p.x) * ease;
-        let cy = p.y + (p.targetY - p.y) * ease;
-
-        if (progress > 0.9) {
-          cx += Math.sin(time * 2 + p.targetX * 0.05) * 1.5;
-          cy += Math.cos(time * 1.5 + p.targetY * 0.05) * 1.5;
-        }
-
-        ctx.beginPath();
-        ctx.arc(cx, cy, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = 0.8 * ease;
-        ctx.fill();
-      });
-
-      animationId = requestAnimationFrame(render);
-    }
-
-    const resize = () => {
-      if (!canvas) return;
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
-      init();
-    };
-
-    resize();
-    window.addEventListener('resize', resize);
-    render();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationId);
-    };
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-20" />;
+  return (
+    <div className="absolute bottom-[15%] left-0 w-full flex justify-center z-20 pointer-events-none">
+      <div ref={wrapperRef} className="flex justify-center font-sans font-semibold tracking-wide opacity-0" style={{ fontSize: 'clamp(1.2rem, 4vw, 3rem)' }}>
+        {CHARS.map((char, i) => (
+          <span key={i} className="transition-colors duration-100" style={{ minWidth: char === ' ' ? '0.3em' : 'auto' }}>
+            {char}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 }
