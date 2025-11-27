@@ -94,13 +94,13 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
           </motion.div>
         </div>
 
-        <div className="flex-1 flex justify-center relative">
+        <div className="flex-1 flex justify-center items-center h-[300px] md:h-[500px] w-full max-w-[500px] mx-auto relative">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1 }}
             viewport={{ once: true }}
-            className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]"
+            className="w-full h-full"
           >
             <AxisCube iconPath={iconPath} color={color} />
           </motion.div>
