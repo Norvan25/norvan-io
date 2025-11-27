@@ -94,10 +94,10 @@ export default function StarField() {
       offCtx.textBaseline = 'middle';
 
       if (isMobile) {
-        const fontSize = Math.min(width * 0.14, 80);
+        const fontSize = Math.min(width * 0.11, 60);
         offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
         offCtx.fillText("INTELLIGENCE", width / 2, height * 0.15);
-        offCtx.fillText("IN MOTION", width / 2, height * 0.22);
+        offCtx.fillText("IN MOTION", width / 2, height * 0.20);
       } else {
         const fontSize = Math.min(width * 0.035, 60);
         offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
@@ -106,7 +106,7 @@ export default function StarField() {
 
       const imageData = offCtx.getImageData(0, 0, width, height);
       const pixels = [];
-      const density = isMobile ? 3 : 2;
+      const density = 2;
 
       for (let y = 0; y < height; y += density) {
         for (let x = 0; x < width; x += density) {
