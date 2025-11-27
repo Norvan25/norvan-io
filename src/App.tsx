@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import Tesseract from './components/3d/Tesseract';
 import Overlay from './components/UI/Overlay';
+import IntelligenceText from './components/IntelligenceText';
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
       <div className="absolute inset-0 z-10">
         <Tesseract />
       </div>
+
+      {/* LAYER 2.5: Intelligence Text Particles */}
+      <IntelligenceText />
 
       {/* LAYER 3: Glass/Vignette Overlay (The "Glassy" Look) */}
       <div
