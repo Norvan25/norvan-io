@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
+interface Module {
+  name: string;
+  icon: string;
+  desc: string;
+}
+
 interface DimensionProps {
   id: string;
   label: string;
@@ -8,7 +14,7 @@ interface DimensionProps {
   color: string;
   iconPath: string;
   index: number;
-  modules: { name: string; icon: string; desc?: string }[];
+  modules: Module[];
 }
 
 export default function DimensionSection({ id, label, desc, color, iconPath, index, modules }: DimensionProps) {
@@ -31,7 +37,7 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
             viewport={{ once: true, margin: "-20%" }}
           >
             <div className="relative mb-8">
-              <h2 className="text-[8vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-20 select-none absolute -top-12 md:-top-20 left-0 w-full" style={{ color: color }}>
+              <h2 className="text-[8vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-10 select-none absolute -top-12 md:-top-20 left-0 w-full" style={{ color: color }}>
                 {id}
               </h2>
               <h3 className="relative text-3xl md:text-5xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
@@ -44,26 +50,30 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
               {desc}
             </p>
 
-            <div className="grid grid-cols-2 gap-4 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
               {modules.map((mod) => (
-                <div key={mod.name} className="flex items-center gap-3 p-3 rounded bg-white/5 border border-white/10 hover:border-white/20 transition-colors group cursor-default">
-                  <div className="w-8 h-8 rounded bg-black/20 flex items-center justify-center p-1.5 relative">
-                    <img
-                      src={mod.icon}
-                      alt={mod.name}
-                      className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                        if (fallback) fallback.style.display = 'block';
-                      }}
-                    />
-                    <div className="w-1.5 h-1.5 rounded-full absolute hidden" style={{ backgroundColor: color }} />
+                <div
+                  key={mod.name}
+                  className="flex flex-col p-4 rounded-lg bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/[0.07] group cursor-default"
+                  style={{ borderLeft: `2px solid ${color}40` }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 rounded bg-black/20 flex items-center justify-center p-1.5 shrink-0">
+                      <img
+                        src={mod.icon}
+                        alt={mod.name}
+                        className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </div>
+                    <span className="text-sm font-mono font-bold tracking-wider text-white uppercase">
+                      {mod.name}
+                    </span>
                   </div>
 
-                  <span className="text-xs font-mono font-bold tracking-wider text-gray-300 group-hover:text-white uppercase">
-                    {mod.name}
-                  </span>
+                  <p className="text-xs text-gray-400 font-light leading-relaxed pl-11">
+                    {mod.desc}
+                  </p>
                 </div>
               ))}
             </div>
