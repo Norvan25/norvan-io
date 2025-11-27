@@ -37,11 +37,12 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
           emissive="#ffffff"
           emissiveIntensity={2}
           transparent={true}
-          opacity={0.9}
-          transmission={0.2}
+          opacity={0.2}
+          transmission={0}
           metalness={0.1}
-          roughness={0.2}
-          side={THREE.FrontSide}
+          roughness={0.1}
+          side={THREE.DoubleSide}
+          depthWrite={false}
         />
         <Edges scale={1.0} threshold={30} color={color} linewidth={2} />
       </RoundedBox>
