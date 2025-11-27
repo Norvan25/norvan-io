@@ -54,14 +54,10 @@ export default function StarField() {
           twinkleOffset: Math.random() * Math.PI * 2
         });
       }
-      const targetPixels = getTextPixels('INTELLIGENCE IN MOTION');
-      for (let i = 0; i < targetPixels.length; i++) {
-        const p = createParticle();
-        p.targetX = targetPixels[i].x;
-        p.targetY = targetPixels[i].y;
-        particles.push(p);
+      const particleCount = Math.floor((width * height) / 8000);
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(createParticle());
       }
-      setTimeout(() => { animationStarted = true; }, 1000);
     }
 
     function createParticle(): Particle {
@@ -70,51 +66,14 @@ export default function StarField() {
         y: Math.random() * height,
         targetX: 0,
         targetY: 0,
-        hasTarget: true,
+        hasTarget: false,
         size: Math.random() * 1.2 + 0.5,
         color: '#4bdbd3',
         twinkleSpeed: Math.random() * 0.05 + 0.02,
         twinkleOffset: Math.random() * Math.PI * 2,
-        velocityX: (Math.random() - 0.5) * 2,
-        velocityY: (Math.random() - 0.5) * 2
+        velocityX: (Math.random() - 0.5) * 0.3,
+        velocityY: (Math.random() - 0.5) * 0.3
       };
-    }
-
-    function getTextPixels(text: string) {
-      const isMobile = width < 768;
-
-      if (isMobile) {
-        return [];
-      }
-
-      const offscreen = document.createElement('canvas');
-      const offCtx = offscreen.getContext('2d');
-      if (!offCtx) return [];
-
-      offscreen.width = width;
-      offscreen.height = height;
-
-      offCtx.fillStyle = '#fff';
-      offCtx.textAlign = 'center';
-      offCtx.textBaseline = 'middle';
-
-      const fontSize = Math.min(width * 0.035, 60);
-      offCtx.font = `900 ${fontSize}px Inter, sans-serif`;
-      offCtx.fillText("INTELLIGENCE IN MOTION", width / 2, height * 0.18);
-
-      const imageData = offCtx.getImageData(0, 0, width, height);
-      const pixels = [];
-      const density = 2;
-
-      for (let y = 0; y < height; y += density) {
-        for (let x = 0; x < width; x += density) {
-          const i = (y * width + x) * 4;
-          if (imageData.data[i + 3] > 128) {
-            pixels.push({ x, y });
-          }
-        }
-      }
-      return pixels;
     }
 
     function resize() {
@@ -140,33 +99,13 @@ export default function StarField() {
         ctx.fill();
       });
 
-      if (animationStarted && animationProgress < 1) {
-        animationProgress += 0.01;
-        if (animationProgress > 1) animationProgress = 1;
-      }
-
-      const easedProgress = easeInOutQuad(animationProgress);
-
       particles.forEach((p, i) => {
-        let x, y;
-        if (animationStarted && p.hasTarget) {
-          let targetX = p.targetX;
-          let targetY = p.targetY;
-
-          if (animationProgress > 0.8) {
-            const wave = Math.sin(time * 1.5 + targetX * 0.01) * 3;
-            targetY += wave;
-          }
-
-          x = p.x + (targetX - p.x) * easedProgress;
-          y = p.y + (targetY - p.y) * easedProgress;
-        } else {
-          p.x += p.velocityX * 0.5;
-          p.y += p.velocityY * 0.5;
-          if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
-          x = p.x; y = p.y;
-        }
+        p.x += p.velocityX;
+        p.y += p.velocityY;
+        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+        const x = p.x;
+        const y = p.y;
 
         const twinkle = Math.sin(time * p.twinkleSpeed * 60 + p.twinkleOffset) * 0.3 + 0.7;
         const size = p.size * twinkle;
