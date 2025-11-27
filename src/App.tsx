@@ -1,16 +1,16 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Tesseract from './components/3d/Tesseract';
-import Overlay from './components/UI/Overlay';
 import IntelligenceText from './components/IntelligenceText';
+import Overlay from './components/UI/Overlay';
 import DimensionSection from './components/Sections/DimensionSection';
 import { Activity, Layers, Zap, Globe, Cpu } from 'lucide-react';
 
 const DIMENSIONS = [
-  { id: 'norX', label: 'Insight', desc: 'Strategic intelligence that reveals patterns, anticipates shifts, and illuminates pathways through complexity.', color: '#007FFF', Icon: Activity },
-  { id: 'norY', label: 'Architecture', desc: 'Structural frameworks that organize systems, define relationships, and create coherent operational models.', color: '#7F4FC9', Icon: Layers },
-  { id: 'norZ', label: 'Expression', desc: 'Creative execution that transforms concepts into tangible experiences, bridging vision and reality.', color: '#F28500', Icon: Zap },
-  { id: 'norW', label: 'Enablement', desc: 'Infrastructure and capabilities that empower action, amplify impact, and sustain momentum.', color: '#009E60', Icon: Globe },
-  { id: 'norV', label: 'Execution', desc: 'Disciplined delivery that transforms plans into outcomes through precision, speed, and adaptability.', color: '#00A6FB', Icon: Cpu },
+  { id: 'NORX', label: 'STRATEGY', color: '#007FFF', Icon: Activity, desc: "The Diagnostic Engine. We scan, analyze, and reveal the hidden friction in your business." },
+  { id: 'NORY', label: 'ARCHITECTURE', color: '#7F4FC9', Icon: Layers, desc: "The Structural Blueprint. We design the systems, workflows, and hierarchies for scale." },
+  { id: 'NORZ', label: 'EXPRESSION', color: '#F28500', Icon: Zap, desc: "The Brand Frequency. We amplify your signal to cut through the market noise." },
+  { id: 'NORW', label: 'ENABLEMENT', color: '#009E60', Icon: Globe, desc: "The Knowledge Base. We train your teams and install the culture of intelligence." },
+  { id: 'NORV', label: 'EXECUTION', color: '#00A6FB', Icon: Cpu, desc: "The Production Line. We deploy the tools, bots, and automations that do the work." },
 ];
 
 function App() {
@@ -26,10 +26,10 @@ function App() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
-  return (
-    <div className="relative w-full min-h-screen bg-[#0A1628] text-white">
 
-      {/* LAYER 1: The Background Mesh (Restored) */}
+  return (
+    <div className="relative w-full bg-[#0A1628] text-white selection:bg-[#00A6FB] selection:text-black">
+
       <div
         className="fixed inset-0 z-0 opacity-70 pointer-events-none transition-transform duration-100 ease-out"
         style={{
@@ -40,41 +40,31 @@ function App() {
         }}
       />
 
-      {/* LAYER 2: The Tesseract Engine */}
-      <div className="absolute inset-0 z-10">
+      <div className="relative h-screen sticky top-0 z-10 overflow-hidden">
         <Tesseract />
-      </div>
+        <IntelligenceText />
 
-      {/* LAYER 2.5: Intelligence Text Particles */}
-      <IntelligenceText />
+        <div
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle at center, transparent 20%, rgba(10, 22, 40, 0.4) 80%, rgba(10, 22, 40, 0.8) 100%)',
+            boxShadow: 'inset 0 0 100px rgba(0, 166, 251, 0.05)'
+          }}
+        />
 
-      {/* LAYER 3: Glass/Vignette Overlay (The "Glassy" Look) */}
-      <div
-        className="absolute inset-0 z-20 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at center, transparent 20%, rgba(10, 22, 40, 0.4) 80%, rgba(10, 22, 40, 0.8) 100%)',
-          boxShadow: 'inset 0 0 100px rgba(0, 166, 251, 0.05)'
-        }}
-      />
-
-      {/* LAYER 4: The UI (HUD) */}
-      <div className="relative z-30 pointer-events-none">
         <Overlay />
       </div>
 
-      {/* DIMENSION SECTIONS */}
-      <div className="relative z-30 bg-[#0A1628]">
-        {DIMENSIONS.map((dim, idx) => (
-          <DimensionSection
-            key={dim.id}
-            id={dim.id}
-            label={dim.label}
-            desc={dim.desc}
-            color={dim.color}
-            Icon={dim.Icon}
-            index={idx}
-          />
+      <div className="relative z-40 bg-[#0A1628]/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-50px_100px_rgba(0,0,0,0.8)]">
+
+        {DIMENSIONS.map((dim, i) => (
+          <DimensionSection key={dim.id} index={i} {...dim} />
         ))}
+
+        <div className="py-24 text-center border-t border-white/10">
+          <h3 className="text-2xl font-mono text-gray-500">SYSTEM ARCHITECTURE END</h3>
+        </div>
+
       </div>
 
     </div>
