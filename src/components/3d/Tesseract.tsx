@@ -303,7 +303,7 @@ export default function Tesseract() {
       }
 
       if (colorProgress > 0 && coreFade > 0) {
-        const faceAlpha = 0.4 * colorProgress * coreFade;
+        const faceAlpha = 0.25 * colorProgress * coreFade;
         const drawFace = (faces: number[][], col: string) => {
            ctx.fillStyle = col;
            ctx.globalAlpha = faceAlpha;
@@ -343,7 +343,7 @@ export default function Tesseract() {
       if (coreProgress > 0 && coreFade > 0 && octagonPoints.length >= 3) {
         const cx = octagonPoints.reduce((sum, p) => sum + p.x, 0) / octagonPoints.length;
         const cy = octagonPoints.reduce((sum, p) => sum + p.y, 0) / octagonPoints.length;
-        const scaleFactor = 0.85;
+        const scaleFactor = 0.75;
         const coreSize = coreProgress;
 
         if (coreSize > 0.1) {
@@ -390,7 +390,7 @@ export default function Tesseract() {
             const endX = lerp(centerX, projected[j].x, prog);
             const endY = lerp(centerY, projected[j].y, prog);
             ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY);
-            ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.stroke();
+            ctx.strokeStyle = col; ctx.lineWidth = 0.8; ctx.stroke();
           }
         });
 
@@ -403,7 +403,7 @@ export default function Tesseract() {
           if (prog > 0) {
             const use3D = morph3D >= 1;
             const col = getVertexColor(i, colorProgress, use3D);
-            const radius = 5.52 * prog;
+            const radius = 2.5 * prog;
             const glowR = radius * 3;
             const glow = ctx.createRadialGradient(x, y, radius*0.5, x, y, glowR);
             glow.addColorStop(0, col + '99');
