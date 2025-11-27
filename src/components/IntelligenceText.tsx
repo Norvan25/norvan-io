@@ -81,7 +81,8 @@ export default function IntelligenceText() {
 
   return (
     <div
-      className="absolute left-0 w-full flex justify-center z-20 pointer-events-none px-4"
+      className="absolute left-0 w-full flex justify-center z-20 pointer-events-none px-4 notranslate"
+      translate="no"
       style={{ top: 'calc(18% - 24px)' }}
     >
       <div
