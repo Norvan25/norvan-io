@@ -36,13 +36,15 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
             viewport={{ once: true, margin: "-20%" }}
           >
             <div className="relative mb-6 md:mb-8">
-              <h2 className="text-[25vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-25 select-none absolute top-[-5%] md:-top-20 left-0 w-full uppercase" style={{ color: color }}>
+              <h2 className="text-[25vw] md:text-[6rem] font-black tracking-tighter leading-none opacity-25 select-none absolute top-[-15%] md:-top-20 left-0 w-full uppercase" style={{ color: color }}>
                 {id}
               </h2>
-              <h3 className="relative text-3xl md:text-5xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
-                {label}
-              </h3>
-              <div className="h-1 w-16 md:w-20 mt-4 mx-auto md:mx-0" style={{ backgroundColor: color }} />
+              <div className="relative mt-12 md:mt-0">
+                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-wide uppercase drop-shadow-lg">
+                  {label}
+                </h3>
+                <div className="h-1 w-16 md:w-20 mt-4 mx-auto md:mx-0" style={{ backgroundColor: color }} />
+              </div>
             </div>
 
             <p className="text-base md:text-xl text-gray-300 font-light leading-relaxed mb-8 md:mb-10">
