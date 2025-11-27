@@ -22,7 +22,7 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
   });
 
   return (
-    <group>
+    <group scale={0.8}>
       <mesh ref={meshRef}>
         <boxGeometry args={[3, 3, 3]} />
         <meshPhysicalMaterial
@@ -60,14 +60,16 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
 
 export default function AxisCube({ iconPath, color }: { iconPath: string; color: string }) {
   return (
-    <Canvas className="w-full h-full" dpr={[1, 3]}>
-      <PerspectiveCamera makeDefault position={[0, 0, 6]} />
-      <ambientLight intensity={1} />
-      <Environment preset="city" />
+    <div className="w-full h-full relative">
+      <Canvas className="w-full h-full block" dpr={[1, 3]}>
+        <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+        <ambientLight intensity={1} />
+        <Environment preset="city" />
 
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-        <CubeMesh iconPath={iconPath} color={color} />
-      </Float>
-    </Canvas>
+        <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
+          <CubeMesh iconPath={iconPath} color={color} />
+        </Float>
+      </Canvas>
+    </div>
   );
 }
