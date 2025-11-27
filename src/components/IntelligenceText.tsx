@@ -87,7 +87,7 @@ export default function IntelligenceText() {
       <div
         ref={wrapperRef}
         className="flex justify-center whitespace-nowrap font-sans font-semibold tracking-wide opacity-0 text-center leading-tight"
-        style={{ fontSize: 'clamp(0.8rem, 3.5vw, 2.5rem)' }}
+        style={{ fontSize: 'clamp(1.0rem, 4.5vw, 2.5rem)' }}
       >
         {CHARS.map((char, i) => (
           <span key={i} id={`char-${i}`} className="transition-colors duration-100" style={{ minWidth: char === ' ' ? '0.3em' : 'auto' }}>
