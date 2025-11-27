@@ -285,7 +285,7 @@ export default function Tesseract() {
       const octagonPoints = [int1, int8, int2, int3, int4, int5, int6, int7].filter(p => p !== null) as {x: number, y: number}[];
 
       if (originProgress > 0 && coreProgress < 1) {
-        const pointSize = originProgress * 8 * (1 - coreProgress);
+        const pointSize = originProgress * 6.4 * (1 - coreProgress);
         const glowSize = pointSize * 3;
         const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
         glow.addColorStop(0, 'rgba(102, 211, 250, 0.8)');
@@ -399,7 +399,7 @@ export default function Tesseract() {
           if (prog > 0) {
             const use3D = morph3D >= 1;
             const col = getVertexColor(i, colorProgress, use3D);
-            const radius = 6.9 * prog;
+            const radius = 5.52 * prog;
             const glowR = radius * 3;
             const glow = ctx.createRadialGradient(x, y, radius*0.5, x, y, glowR);
             glow.addColorStop(0, col + '99');
