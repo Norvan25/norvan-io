@@ -48,7 +48,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
         <div className="flex-1 w-full bg-white/5 relative z-10">
           <iframe
-            src="https://calendly.com/norvan-systems/discovery"
+            src="https://calendly.com/emil-petrosyan-norvan/30min"
             width="100%"
             height="100%"
             frameBorder="0"
