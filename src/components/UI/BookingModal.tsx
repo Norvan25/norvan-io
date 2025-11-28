@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import { InlineWidget } from "react-calendly";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -46,15 +47,17 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           </button>
         </div>
 
-        <div className="flex-1 w-full bg-white/5 relative z-10">
-          <iframe
-            src="https://calendly.com/emil-petrosyan-norvan/30min"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            className="relative z-10 w-full h-full"
-            title="Schedule Deployment"
-          ></iframe>
+        <div className="flex-1 w-full bg-white/5 relative z-10 overflow-hidden">
+          <InlineWidget
+            url="https://calendly.com/emil-petrosyan-norvan/30min"
+            styles={{ height: '100%', width: '100%' }}
+            prefill={{
+              email: '',
+              firstName: '',
+              lastName: '',
+              name: '',
+            }}
+          />
         </div>
 
       </div>
