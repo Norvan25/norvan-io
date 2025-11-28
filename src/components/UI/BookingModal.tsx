@@ -18,35 +18,35 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8 pointer-events-auto">
 
       <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+        className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity cursor-pointer"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl h-[80vh] bg-[#0A1628] border border-[#00A6FB]/30 rounded-xl shadow-[0_0_50px_rgba(0,166,251,0.2)] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-4xl h-[80vh] bg-[#0A1628] border border-[#00A6FB]/30 rounded-xl shadow-[0_0_50px_rgba(0,166,251,0.4)] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200 z-[10000]">
 
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5 relative z-20">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-[#00A6FB] rounded-full animate-pulse" />
             <span className="text-sm font-mono font-bold tracking-widest text-white">
               INITIALIZE DEPLOYMENT
             </span>
           </div>
+
           <button
-            onClick={onClose}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors group"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-all group border border-transparent hover:border-red-500/50 cursor-pointer relative z-50"
           >
-            <X className="w-5 h-5 text-gray-400 group-hover:text-white" />
+            <X className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
           </button>
         </div>
 
-        <div className="flex-1 w-full bg-white/5 relative">
-          <div className="absolute inset-0 flex items-center justify-center z-0">
-            <span className="text-xs font-mono text-[#00A6FB] animate-pulse">ESTABLISHING UPLINK...</span>
-          </div>
-
+        <div className="flex-1 w-full bg-white/5 relative z-10">
           <iframe
             src="https://calendly.com/norvan-systems/discovery"
             width="100%"
