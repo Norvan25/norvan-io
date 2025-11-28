@@ -20,7 +20,7 @@ interface DimensionProps {
 
 export default function DimensionSection({ id, label, desc, color, iconPath, index, modules }: DimensionProps) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-16 md:py-24 border-t border-white/5">
+    <section id={id} className="relative min-h-screen flex items-center justify-center overflow-hidden py-16 md:py-24 border-t border-white/5">
 
       <div className="absolute inset-0 pointer-events-none transition-colors duration-500"
         style={{ background: `radial-gradient(circle at 20% 50%, ${color}15 0%, ${color}02 40%, transparent 70%)` }}
