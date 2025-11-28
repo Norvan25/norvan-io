@@ -28,18 +28,27 @@ export default function Footer() {
             <p className="text-gray-400 text-sm font-light leading-relaxed max-w-xs">
               We diagnose, architect, and execute the systems that power the next generation of business intelligence.
             </p>
-            <div className="flex flex-col gap-3 text-xs text-gray-500">
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
-                <span>123 AI Boulevard, Suite 500<br />San Francisco, CA 94105</span>
+            <div className="space-y-6">
+              <div className="flex gap-4 text-sm text-gray-400 font-light items-start">
+                <MapPin className="w-5 h-5 shrink-0 text-[#00A6FB] mt-1" />
+                <p className="leading-relaxed">
+                  Norvan LLC. FZ<br/>
+                  Meydan Grandstand, 6th Floor<br/>
+                  Meydan Road, Nad Al Sheba<br/>
+                  Dubai, Dubai
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 shrink-0" />
-                <span>+1 (555) 123-4567</span>
+
+              <div className="flex gap-4 text-sm text-gray-400 font-light items-center">
+                <Phone className="w-5 h-5 shrink-0 text-[#00A6FB]" />
+                <span>+60 19 606 9033</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 shrink-0" />
-                <span>contact@norvan.ai</span>
+
+              <div className="flex gap-4 text-sm text-gray-400 font-light items-center">
+                <Mail className="w-5 h-5 shrink-0 text-[#00A6FB]" />
+                <a href="mailto:info@norvan.io" className="hover:text-white transition-colors">
+                  info@norvan.io
+                </a>
               </div>
             </div>
           </div>
