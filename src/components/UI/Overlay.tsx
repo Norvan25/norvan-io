@@ -36,7 +36,7 @@ export default function Overlay() {
           >
             <Mic className="w-5 h-5 text-[#00A6FB] group-hover:scale-110 transition-transform" />
             <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#00A6FB] transition-colors">
-              VOICE UPLINK
+              NOR-VOICE
             </span>
           </motion.button>
 
@@ -47,7 +47,7 @@ export default function Overlay() {
           >
             <MessageSquareCode className="w-5 h-5 text-[#009E60] group-hover:scale-110 transition-transform" />
             <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#009E60] transition-colors">
-              LIVE TERMINAL
+              NOR-LINK
             </span>
           </motion.button>
 
@@ -58,7 +58,7 @@ export default function Overlay() {
           >
             <Rocket className="w-5 h-5 text-[#F28500] group-hover:text-white transition-colors" />
             <span className="text-sm font-mono font-bold tracking-widest text-[#F28500] group-hover:text-white transition-colors">
-              INITIALIZE PROJECT
+              DEPLOY
             </span>
           </motion.button>
 
