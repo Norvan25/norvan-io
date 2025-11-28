@@ -1,51 +1,33 @@
-import { motion } from "framer-motion";
 import { Mic, MessageSquareCode, Rocket } from "lucide-react";
 
-interface ActionTrinityProps {
-  color?: string;
-}
-
-export default function ActionTrinity({ color = "#00A6FB" }: ActionTrinityProps) {
+export default function ActionTrinity({ color = "#00A6FB" }: { color?: string }) {
   return (
-    <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto items-center justify-center">
+    <div className="flex flex-row gap-2 md:gap-4 w-full md:w-auto items-stretch justify-center mt-8">
 
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="pointer-events-auto group relative flex items-center gap-3 px-6 py-4 bg-black/20 backdrop-blur-xl border border-[#00A6FB]/30 hover:border-[#00A6FB] rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,166,251,0.3)] w-full md:w-auto justify-center"
-      >
-        <Mic className="w-5 h-5 text-[#00A6FB] group-hover:scale-110 transition-transform" />
-        <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#00A6FB] transition-colors">
+      <button className="group relative flex-1 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3 px-1 py-3 md:px-6 md:py-3 bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#00A6FB] rounded-lg transition-all hover:bg-[#00A6FB]/10">
+        <Mic className="w-3 h-3 md:w-4 md:h-4 text-gray-400 group-hover:text-[#00A6FB] transition-colors" />
+        <span className="text-[9px] md:text-xs font-mono font-bold tracking-wider text-gray-300 group-hover:text-white whitespace-nowrap">
           NOR-VOICE
         </span>
-      </motion.button>
+      </button>
 
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="pointer-events-auto group relative flex items-center gap-3 px-6 py-4 bg-black/20 backdrop-blur-xl border border-[#009E60]/30 hover:border-[#009E60] rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,158,96,0.3)] w-full md:w-auto justify-center"
-      >
-        <MessageSquareCode className="w-5 h-5 text-[#009E60] group-hover:scale-110 transition-transform" />
-        <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#009E60] transition-colors">
+      <button className="group relative flex-1 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3 px-1 py-3 md:px-6 md:py-3 bg-white/5 backdrop-blur-md border border-white/10 hover:border-[#009E60] rounded-lg transition-all hover:bg-[#009E60]/10">
+        <MessageSquareCode className="w-3 h-3 md:w-4 md:h-4 text-gray-400 group-hover:text-[#009E60] transition-colors" />
+        <span className="text-[9px] md:text-xs font-mono font-bold tracking-wider text-gray-300 group-hover:text-white whitespace-nowrap">
           NOR-LINK
         </span>
-      </motion.button>
+      </button>
 
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="pointer-events-auto group relative flex items-center gap-3 px-8 py-4 bg-black/40 backdrop-blur-xl border rounded-lg transition-all w-full md:w-auto justify-center hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+      <button
+        className="group relative flex-1 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3 px-1 py-3 md:px-8 md:py-3 bg-black/40 backdrop-blur-xl border rounded-lg transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
         style={{ borderColor: color }}
       >
-        <div
-          className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity rounded-lg"
-          style={{ backgroundColor: color }}
-        />
-        <Rocket className="w-5 h-5 text-white group-hover:scale-110 transition-transform relative z-10" />
-        <span className="text-sm font-mono font-bold tracking-widest text-white relative z-10">
+        <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity rounded-lg" style={{ backgroundColor: color }} />
+        <Rocket className="w-3 h-3 md:w-4 md:h-4 text-white group-hover:translate-x-1 transition-transform" />
+        <span className="text-[9px] md:text-xs font-mono font-bold tracking-wider text-white">
           DEPLOY
         </span>
-      </motion.button>
+      </button>
 
     </div>
   );
