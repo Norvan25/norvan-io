@@ -7,19 +7,28 @@ interface BookingModalProps {
 }
 
 export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => setIsMounted(true), []);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isMounted) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <PopupModal
       url="https://calendly.com/emil-petrosyan-norvan/30min"
       onModalClose={onClose}
       open={isOpen}
-      rootElement={document.getElementById("root") || document.body}
+      rootElement={document.body}
       styles={{
-        height: '1000px'
+        overflow: "hidden",
+      }}
+      prefill={{
+        email: '',
+        firstName: '',
+        lastName: '',
+        name: '',
       }}
     />
   );
