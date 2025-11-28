@@ -12,7 +12,7 @@ const DIMENSIONS = [
     id: 'NORX',
     label: 'INSIGHT',
     color: '#007FFF',
-    iconPath: '/icons/norx.svg',
+    iconPath: '/icons/modules/nordata.svg',
     desc: "The AI audit layer that scans your business, uncovers inefficiencies, and pinpoints where ROI comes first.",
     modules: [
       { name: "NorData", icon: "/icons/modules/nordata.svg", desc: "Collects and unifies your company's data into one clean, structured source ready for AI." },
@@ -25,7 +25,7 @@ const DIMENSIONS = [
     id: 'NORY',
     label: 'ARCHITECTURE',
     color: '#7F4FC9',
-    iconPath: '/icons/nory.svg',
+    iconPath: '/icons/modules/normap.svg',
     desc: "The AI architecture axis that designs workflows and automations to scale operations without friction.",
     modules: [
       { name: "NorMap", icon: "/icons/modules/normap.svg", desc: "Generates AI workflow blueprints, mapping journeys and operational flowcharts." },
@@ -38,7 +38,7 @@ const DIMENSIONS = [
     id: 'NORZ',
     label: 'EXPRESSION',
     color: '#F28500',
-    iconPath: '/icons/norz.svg',
+    iconPath: '/icons/modules/norbrand.svg',
     desc: "The AI expression axis that builds content engines, campaign logic, and omnichannel brand systems.",
     modules: [
       { name: "NorBrand", icon: "/icons/modules/norbrand.svg", desc: "Codifies brand voice, positioning, and narrative clarity into an AI-ready framework." },
@@ -51,7 +51,7 @@ const DIMENSIONS = [
     id: 'NORW',
     label: 'KNOWLEDGE',
     color: '#009E60',
-    iconPath: '/icons/norw.svg',
+    iconPath: '/icons/modules/nortrain.svg',
     desc: "The AI enablement axis that transforms knowledge into adaptive training and performance systems.",
     modules: [
       { name: "NorTrain", icon: "/icons/modules/nortrain.svg", desc: "Builds adaptive SOPs, onboarding, and knowledge bases that evolve with every project." },
@@ -64,7 +64,7 @@ const DIMENSIONS = [
     id: 'NORV',
     label: 'EXECUTION',
     color: '#00A6FB',
-    iconPath: '/icons/norv.svg',
+    iconPath: '/icons/modules/norbot.svg',
     desc: "The AI deployment axis that connects tools, automations, and data into live operational systems.",
     modules: [
       { name: "NorBot", icon: "/icons/modules/norbot.svg", desc: "Automates workflows with AI agents that execute precise, repeatable operations across systems." },
@@ -120,13 +120,13 @@ function App() {
           <Overlay />
         </div>
 
-        <div className="relative w-full">
+        <div className="relative w-full bg-[#0A1628]/85 backdrop-blur-xl border-t border-white/10">
           {DIMENSIONS.map((dim, i) => (
             <DimensionSection key={dim.id} index={i} {...dim} />
           ))}
-        </div>
 
-        <Footer />
+          <Footer />
+        </div>
 
       </div>
 
