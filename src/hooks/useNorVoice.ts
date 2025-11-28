@@ -3,7 +3,7 @@ import Vapi from '@vapi-ai/web';
 
 const VAPI_PUBLIC_KEY = 'c22f7257-a57e-4615-a547-98c01766d3c9';
 
-const ASSISTANT_ID = '9a6f0850-4849-4077-b84c-65d41a4aac8c';
+const ASSISTANT_ID = 'cb741d7a-79c5-499c-9405-275612dad372';
 
 const vapi = new Vapi(VAPI_PUBLIC_KEY);
 
