@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import AxisCube from '../3d/AxisCube';
 import ActionTrinity from '../UI/ActionTrinity';
 
@@ -51,14 +52,14 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
               {desc}
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-10 md:mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
               {modules.map((mod) => (
                 <div
                   key={mod.name}
-                  className="flex flex-col p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/[0.08] group cursor-default"
-                  style={{ borderLeft: `3px solid ${color}60` }}
+                  className="flex flex-col p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/[0.08] group cursor-default"
+                  style={{ borderLeft: `3px solid ${color}80` }}
                 >
-                  <div className="flex items-center gap-4 mb-2">
+                  <div className="flex items-center gap-4 mb-3">
                     <div className="w-10 h-10 shrink-0">
                       <img
                         src={mod.icon}
@@ -67,25 +68,26 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
                         onError={(e) => { e.currentTarget.style.display = 'none'; }}
                       />
                     </div>
-                    <span className="text-sm md:text-base font-mono font-bold tracking-wide text-white">
+                    <span className="text-base font-mono font-bold tracking-wide text-white">
                       <span style={{ color: color }}>{mod.name.substring(0, 3)}</span>
                       <span>{mod.name.substring(3)}</span>
                     </span>
                   </div>
-                  <p className="text-xs md:text-sm text-gray-200 font-normal leading-relaxed pl-14">
+
+                  <p className="text-sm text-gray-200 font-normal leading-relaxed pl-14 text-left">
                     {mod.desc}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-12 w-full md:w-auto">
+            <div className="w-full md:w-auto">
               <ActionTrinity color={color} />
             </div>
           </motion.div>
         </div>
 
-        <div className="w-full h-[300px] md:h-[500px] flex-none md:flex-1 relative z-10">
+        <div className="w-full h-[350px] md:h-[500px] flex-none md:flex-1 relative z-10">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
