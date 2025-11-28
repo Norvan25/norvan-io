@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Tesseract from './components/3d/Tesseract';
 import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
+import Header from './components/UI/Header';
 import DimensionSection from './components/Sections/DimensionSection';
 import StarField from './components/StarField';
 
@@ -89,6 +90,8 @@ function App() {
 
   return (
     <div className="relative w-full min-h-screen bg-[#0A1628] text-white selection:bg-[#00A6FB] selection:text-black">
+
+      <Header />
 
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
