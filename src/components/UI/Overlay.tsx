@@ -1,14 +1,6 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { Mic, MessageSquareCode, Rocket } from "lucide-react";
 import StarField from "../StarField";
-
-const DOCK_ITEMS = [
-  { id: 'norX', letter: 'X', label: 'Insight', color: '#007FFF' },
-  { id: 'norY', letter: 'Y', label: 'Architecture', color: '#7F4FC9' },
-  { id: 'norZ', letter: 'Z', label: 'Expression', color: '#F28500' },
-  { id: 'norW', letter: 'W', label: 'Enablement', color: '#009E60' },
-  { id: 'norV', letter: 'V', label: 'Execution', color: '#00A6FB' },
-];
 
 export default function Overlay() {
   return (
@@ -33,41 +25,43 @@ export default function Overlay() {
 
       <div className="flex-grow"></div>
 
-      <div className="flex flex-col items-center w-full gap-8 mb-12">
-        <div className="flex flex-col md:flex-row items-end md:items-center justify-between w-full gap-8 relative z-50">
+      <div className="flex flex-col items-center w-full gap-8 relative z-50 mb-12">
 
-          <div className="relative mx-auto md:mx-0">
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] text-[#00A6FB] tracking-[0.2em] whitespace-nowrap opacity-70">
-              SELECT DIMENSION
-            </div>
-
-            <div className="pointer-events-auto bg-white/5 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex gap-3 shadow-2xl">
-              {DOCK_ITEMS.map((item) => (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  className="relative group w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center border border-white/5 bg-gradient-to-b from-white/10 to-transparent hover:border-white/20 transition-all"
-                >
-                  <span className="font-mono font-bold text-lg md:text-xl" style={{ color: item.color }}>
-                    {item.letter}
-                  </span>
-
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 backdrop-blur px-3 py-1 rounded text-[10px] font-mono text-white whitespace-nowrap border border-white/10 pointer-events-none">
-                    <span style={{ color: item.color }}>{item.id}</span> • {item.label}
-                  </div>
-                </motion.button>
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto items-center justify-center">
 
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="pointer-events-auto group flex items-center gap-3 px-8 py-3 bg-black/40 backdrop-blur-md border border-[#00A6FB]/50 text-[#00A6FB] font-light tracking-[0.2em] text-xs md:text-sm rounded-md hover:bg-[#00A6FB]/10 hover:border-[#00A6FB] hover:shadow-[0_0_20px_rgba(0,166,251,0.3)] transition-all duration-500"
+            className="pointer-events-auto group relative flex items-center gap-3 px-6 py-4 bg-black/20 backdrop-blur-xl border border-[#00A6FB]/30 hover:border-[#00A6FB] rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,166,251,0.3)] w-full md:w-auto justify-center"
           >
-            ENTER SYSTEM
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <Mic className="w-5 h-5 text-[#00A6FB] group-hover:scale-110 transition-transform" />
+            <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#00A6FB] transition-colors">
+              VOICE UPLINK
+            </span>
           </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="pointer-events-auto group relative flex items-center gap-3 px-6 py-4 bg-black/20 backdrop-blur-xl border border-[#009E60]/30 hover:border-[#009E60] rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,158,96,0.3)] w-full md:w-auto justify-center"
+          >
+            <MessageSquareCode className="w-5 h-5 text-[#009E60] group-hover:scale-110 transition-transform" />
+            <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#009E60] transition-colors">
+              LIVE TERMINAL
+            </span>
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="pointer-events-auto group relative flex items-center gap-3 px-8 py-4 bg-[#F28500]/10 backdrop-blur-xl border border-[#F28500] hover:bg-[#F28500] rounded-lg transition-all hover:shadow-[0_0_30px_rgba(242,133,0,0.4)] w-full md:w-auto justify-center"
+          >
+            <Rocket className="w-5 h-5 text-[#F28500] group-hover:text-white transition-colors" />
+            <span className="text-sm font-mono font-bold tracking-widest text-[#F28500] group-hover:text-white transition-colors">
+              INITIALIZE PROJECT
+            </span>
+          </motion.button>
+
         </div>
       </div>
 
