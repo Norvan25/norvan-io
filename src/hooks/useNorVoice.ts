@@ -1,38 +1,59 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Vapi from '@vapi-ai/web';
 
 const VAPI_PUBLIC_KEY = 'c22f7257-a57e-4615-a547-98c01766d3c9';
+const ASSISTANT_ID = '9a6f0850-4849-4077-b84c-65d41a4aac8c';
 
-const ASSISTANT_ID = 'cb741d7a-79c5-499c-9405-275612dad372';
-
-const vapi = new Vapi(VAPI_PUBLIC_KEY);
+let vapiInstance: any = null;
+function getVapi() {
+  if (!vapiInstance) {
+    vapiInstance = new Vapi(VAPI_PUBLIC_KEY);
+  }
+  return vapiInstance;
+}
 
 export function useNorVoice() {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isMounted = useRef(true);
+
   useEffect(() => {
+    isMounted.current = true;
+    const vapi = getVapi();
+
     const onCallStart = () => {
-      console.log('NorVoice: System Connected');
-      setIsSessionActive(true);
-      setIsLoading(false);
+      console.log('NorVoice: Connected');
+      if (isMounted.current) {
+        setIsSessionActive(true);
+        setIsLoading(false);
+      }
     };
 
     const onCallEnd = () => {
-      console.log('NorVoice: System Disconnected');
-      setIsSessionActive(false);
-      setIsSpeaking(false);
-      setIsLoading(false);
+      console.log('NorVoice: Disconnected');
+      if (isMounted.current) {
+        setIsSessionActive(false);
+        setIsSpeaking(false);
+        setIsLoading(false);
+      }
     };
 
-    const onSpeechStart = () => setIsSpeaking(true);
-    const onSpeechEnd = () => setIsSpeaking(false);
+    const onSpeechStart = () => {
+      if (isMounted.current) setIsSpeaking(true);
+    };
 
-    const onError = (error: any) => {
-      console.error('NorVoice Critical Error:', error);
-      setIsSessionActive(false);
-      setIsLoading(false);
+    const onSpeechEnd = () => {
+      if (isMounted.current) setIsSpeaking(false);
+    };
+
+    const onError = (err: any) => {
+      console.error('NorVoice Error:', err);
+      if (isMounted.current) {
+        setIsSessionActive(false);
+        setIsLoading(false);
+      }
     };
 
     vapi.on('call-start', onCallStart);
@@ -42,20 +63,20 @@ export function useNorVoice() {
     vapi.on('error', onError);
 
     return () => {
-      vapi.stop();
+      isMounted.current = false;
       vapi.removeAllListeners();
     };
   }, []);
 
-  const toggleVoice = useCallback(() => {
+  const toggleVoice = useCallback(async () => {
+    const vapi = getVapi();
+
     if (isSessionActive) {
-      console.log('NorVoice: Stopping...');
       vapi.stop();
     } else {
-      console.log('NorVoice: Initializing...');
       setIsLoading(true);
       try {
-        vapi.start(ASSISTANT_ID);
+        await vapi.start(ASSISTANT_ID);
       } catch (e) {
         console.error("Failed to start Vapi:", e);
         setIsLoading(false);
