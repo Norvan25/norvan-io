@@ -4,7 +4,7 @@ import StarField from "../StarField";
 
 export default function Overlay() {
   return (
-    <div className="fixed inset-0 pointer-events-none flex flex-col justify-between p-6 md:p-12">
+    <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 md:p-12">
 
       <div className="absolute inset-0 pointer-events-none">
         <StarField />
