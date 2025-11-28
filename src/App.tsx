@@ -4,6 +4,7 @@ import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
 import Header from './components/UI/Header';
 import DimensionSection from './components/Sections/DimensionSection';
+import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
 
 const DIMENSIONS = [
@@ -125,9 +126,7 @@ function App() {
           ))}
         </div>
 
-        <div className="py-32 text-center relative z-10 bg-gradient-to-t from-[#0A1628] to-transparent">
-          <h3 className="text-xl font-mono text-gray-500 tracking-widest">SYSTEM END</h3>
-        </div>
+        <Footer />
 
       </div>
 
