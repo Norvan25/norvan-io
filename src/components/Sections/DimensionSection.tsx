@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import AxisCube from '../3d/AxisCube';
+import ActionTrinity from '../UI/ActionTrinity';
 
 interface Module {
   name: string;
@@ -79,13 +79,9 @@ export default function DimensionSection({ id, label, desc, color, iconPath, ind
               ))}
             </div>
 
-            <button
-              className="group flex items-center gap-3 px-8 py-3 bg-black/30 backdrop-blur-md border border-white/20 text-white tracking-[0.2em] text-xs font-bold rounded hover:bg-white/10 transition-all mx-auto md:mx-0 mb-8 md:mb-0"
-              style={{ borderColor: `${color}80` }}
-            >
-              <span style={{ color: color }}>EXPLORE</span> {id}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: color }} />
-            </button>
+            <div className="mt-12 w-full md:w-auto">
+              <ActionTrinity color={color} />
+            </div>
           </motion.div>
         </div>
 

@@ -1,6 +1,5 @@
-import { motion } from "framer-motion";
-import { Mic, MessageSquareCode, Rocket } from "lucide-react";
 import StarField from "../StarField";
+import ActionTrinity from "./ActionTrinity";
 
 export default function Overlay() {
   return (
@@ -26,43 +25,7 @@ export default function Overlay() {
       <div className="flex-grow"></div>
 
       <div className="flex flex-col items-center w-full gap-8 relative z-50 mb-12">
-
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto items-center justify-center">
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="pointer-events-auto group relative flex items-center gap-3 px-6 py-4 bg-black/20 backdrop-blur-xl border border-[#00A6FB]/30 hover:border-[#00A6FB] rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,166,251,0.3)] w-full md:w-auto justify-center"
-          >
-            <Mic className="w-5 h-5 text-[#00A6FB] group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#00A6FB] transition-colors">
-              NOR-VOICE
-            </span>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="pointer-events-auto group relative flex items-center gap-3 px-6 py-4 bg-black/20 backdrop-blur-xl border border-[#009E60]/30 hover:border-[#009E60] rounded-lg transition-all hover:shadow-[0_0_20px_rgba(0,158,96,0.3)] w-full md:w-auto justify-center"
-          >
-            <MessageSquareCode className="w-5 h-5 text-[#009E60] group-hover:scale-110 transition-transform" />
-            <span className="text-sm font-mono font-bold tracking-widest text-white group-hover:text-[#009E60] transition-colors">
-              NOR-LINK
-            </span>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="pointer-events-auto group relative flex items-center gap-3 px-8 py-4 bg-[#F28500]/10 backdrop-blur-xl border border-[#F28500] hover:bg-[#F28500] rounded-lg transition-all hover:shadow-[0_0_30px_rgba(242,133,0,0.4)] w-full md:w-auto justify-center"
-          >
-            <Rocket className="w-5 h-5 text-[#F28500] group-hover:text-white transition-colors" />
-            <span className="text-sm font-mono font-bold tracking-widest text-[#F28500] group-hover:text-white transition-colors">
-              DEPLOY
-            </span>
-          </motion.button>
-
-        </div>
+        <ActionTrinity color="#F28500" />
       </div>
 
       {/* SCROLL INDICATOR */}
