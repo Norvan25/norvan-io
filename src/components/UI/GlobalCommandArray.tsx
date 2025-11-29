@@ -26,7 +26,7 @@ export default function GlobalCommandArray() {
           {isSessionActive && isSupported && (
             <div
               onClick={(e) => { e.stopPropagation(); toggleOutput(); }}
-              className="absolute -top-14 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 px-3 py-1.5 bg-black/90 backdrop-blur-md border border-white/20 rounded-full cursor-pointer hover:border-[#00A6FB] hover:text-[#00A6FB] text-gray-300 transition-all shadow-lg"
+              className="absolute -top-14 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 px-3 py-1.5 bg-black/90 backdrop-blur-md border border-white/20 rounded-full cursor-pointer hover:border-[#00A6FB] hover:text-[#00A6FB] text-gray-300 transition-all shadow-[0_0_20px_rgba(0,0,0,0.8)]"
             >
               {displayLabel === 'SPEAKER' ? <Volume2 className="w-3 h-3" /> : <Smartphone className="w-3 h-3" />}
               <span className="text-[9px] font-mono font-bold tracking-wider whitespace-nowrap">
@@ -40,38 +40,47 @@ export default function GlobalCommandArray() {
             disabled={isLoading}
             className={`group relative rounded-full flex items-center justify-center transition-all duration-500
               w-[72px] h-[72px] md:w-[64px] md:h-[64px]
-              backdrop-blur-xl border-2
-              ${isLoading ? 'scale-95 border-yellow-500/50 bg-yellow-500/10' : ''}
-              ${isSessionActive
-                ? 'shadow-[0_0_40px_rgba(239,68,68,0.5)] border-red-500 bg-red-500/20'
-                : 'shadow-[0_0_30px_rgba(0,166,251,0.2)] border-[#00A6FB]/60 bg-white/10 hover:bg-[#00A6FB]/20 hover:border-[#00A6FB]'}
-              ${!isSessionActive && !isLoading ? 'animate-[pulse_3s_ease-in-out_infinite]' : ''}
+              backdrop-blur-2xl border border-white/10
+
+              ${isLoading
+                ? 'border-yellow-500/50 bg-yellow-500/10 shadow-[0_0_50px_rgba(234,179,8,0.4)]'
+                : isSessionActive
+                  ? 'border-red-500/50 bg-red-500/20 shadow-[0_0_60px_rgba(239,68,68,0.7)] animate-pulse'
+                  : 'border-[#00A6FB]/40 bg-[#00A6FB]/10 shadow-[0_0_40px_rgba(0,166,251,0.3)] hover:shadow-[0_0_60px_rgba(0,166,251,0.6)] hover:border-[#00A6FB]/80'
+              }
             `}
           >
-            {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-red-400 opacity-50 animate-ping" />}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 via-transparent to-transparent opacity-70" />
 
-            {isLoading ? <Spinner /> : (
-              <Mic className={`w-8 h-8 md:w-7 md:h-7 transition-colors ${isSessionActive ? 'text-red-400' : 'text-[#00A6FB] group-hover:text-white'}`} />
-            )}
+            {isSpeaking && <div className="absolute inset-[-8px] rounded-full border border-red-400/50 opacity-40 animate-ping" />}
+
+            <div className="relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+              {isLoading ? <Spinner /> : (
+                <Mic className={`w-8 h-8 md:w-7 md:h-7 transition-colors ${isSessionActive ? 'text-white' : 'text-cyan-200 group-hover:text-white'}`} />
+              )}
+            </div>
           </button>
         </div>
 
         <button
           className="group relative rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110
             w-[72px] h-[72px] md:w-[64px] md:h-[64px]
-            shadow-[0_0_20px_rgba(0,158,96,0.2)] border-2 border-[#009E60]/60 bg-white/10 hover:bg-[#009E60]/20 hover:border-[#009E60] backdrop-blur-xl"
+            shadow-[0_0_40px_rgba(0,158,96,0.25)] hover:shadow-[0_0_60px_rgba(0,158,96,0.5)]
+            border border-[#009E60]/40 bg-[#009E60]/10 hover:bg-[#009E60]/20 hover:border-[#009E60]/80 backdrop-blur-2xl"
         >
-          <MessageSquareCode className="w-8 h-8 md:w-7 md:h-7 text-[#009E60] group-hover:text-white transition-colors" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 via-transparent to-transparent opacity-50" />
+          <MessageSquareCode className="relative z-10 w-8 h-8 md:w-7 md:h-7 text-emerald-200 group-hover:text-white transition-colors drop-shadow-[0_0_15px_rgba(0,158,96,0.8)]" />
         </button>
 
         <button
           onClick={() => setShowBooking(true)}
           className="group relative rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110
             w-[72px] h-[72px] md:w-[64px] md:h-[64px]
-            shadow-[0_0_20px_rgba(242,133,0,0.2)] border-2 border-[#F28500]/60 bg-white/10 hover:bg-[#F28500]/20 hover:border-[#F28500] backdrop-blur-xl"
+            shadow-[0_0_40px_rgba(242,133,0,0.25)] hover:shadow-[0_0_60px_rgba(242,133,0,0.5)]
+            border border-[#F28500]/40 bg-[#F28500]/10 hover:bg-[#F28500]/20 hover:border-[#F28500]/80 backdrop-blur-2xl"
         >
           <div className="absolute inset-1 rounded-full bg-[#F28500]/5 group-hover:bg-[#F28500]/20 transition-colors" />
-          <CalendarCheck className="w-8 h-8 md:w-7 md:h-7 text-[#F28500] group-hover:text-white transition-colors" />
+          <CalendarCheck className="relative z-10 w-8 h-8 md:w-7 md:h-7 text-orange-200 group-hover:text-white transition-colors drop-shadow-[0_0_15px_rgba(242,133,0,0.8)]" />
         </button>
 
       </div>
