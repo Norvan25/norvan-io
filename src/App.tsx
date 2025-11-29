@@ -6,7 +6,7 @@ import Header from './components/UI/Header';
 import DimensionSection from './components/Sections/DimensionSection';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
-import GlobalVoiceTrigger from './components/UI/GlobalVoiceTrigger';
+import GlobalCommandArray from './components/UI/GlobalCommandArray';
 
 const DIMENSIONS = [
   {
@@ -131,7 +131,7 @@ function App() {
 
       </div>
 
-      <GlobalVoiceTrigger />
+      <GlobalCommandArray />
 
     </div>
   );
