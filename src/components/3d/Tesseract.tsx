@@ -339,15 +339,31 @@ export default function Tesseract() {
           const avgZ = face.reduce((sum, vi) => sum + projected[vi].z, 0) / 4;
           return { vertices: face, avgZ, color: getTesseractFaceColor(face) };
         }).sort((a, b) => a.avgZ - b.avgZ);
-        const face3DAlpha = 0.3 * morph3D;
+
         sortedFaces.forEach(face => {
+          const p1 = projected[face.vertices[0]];
+          const p2 = projected[face.vertices[1]];
+          const p3 = projected[face.vertices[2]];
+
           ctx.beginPath();
-          ctx.moveTo(projected[face.vertices[0]].x, projected[face.vertices[0]].y);
-          face.vertices.slice(1).forEach(v => ctx.lineTo(projected[v].x, projected[v].y));
+          ctx.moveTo(p1.x, p1.y);
+          face.vertices.slice(1).forEach(vi => ctx.lineTo(projected[vi].x, projected[vi].y));
           ctx.closePath();
-          ctx.fillStyle = face.color;
-          ctx.globalAlpha = face3DAlpha;
+
+          ctx.fillStyle = 'rgba(10, 22, 40, 0.4)';
+          ctx.globalAlpha = morph3D * 0.6;
           ctx.fill();
+
+          const grad = ctx.createLinearGradient(p1.x, p1.y, p3.x, p3.y);
+          grad.addColorStop(0, 'rgba(255, 255, 255, 0.0)');
+          grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.15)');
+          grad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          ctx.strokeStyle = 'rgba(0, 166, 251, 0.4)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
           ctx.globalAlpha = 1;
         });
       }
