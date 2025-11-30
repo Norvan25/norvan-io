@@ -122,7 +122,7 @@ function App() {
           <Overlay />
         </div>
 
-        <div className="relative w-full bg-[#0A1628]/85 backdrop-blur-xl border-t border-white/10">
+        <div className="relative w-full z-10 border-t border-white/10">
           {DIMENSIONS.map((dim, i) => (
             <DimensionSection key={dim.id} index={i} {...dim} />
           ))}
