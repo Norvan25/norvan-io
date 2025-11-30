@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Brain, Cpu, Network, Bot, Zap, Workflow, Globe, Database, Code } from 'lucide-react';
+import {
+  Brain, Cpu, Network, Bot, Zap, Workflow, Globe,
+  Database, Code, Sparkles, BrainCircuit
+} from 'lucide-react';
 
 const icons = [
   { Icon: Brain, x: 10, y: 20, delay: 0 },
+  { Icon: Sparkles, x: 85, y: 25, delay: 1.5 },
   { Icon: Cpu, x: 80, y: 15, delay: 2 },
   { Icon: Network, x: 20, y: 80, delay: 1 },
   { Icon: Bot, x: 70, y: 70, delay: 3 },
@@ -12,6 +16,7 @@ const icons = [
   { Icon: Globe, x: 15, y: 50, delay: 0.5 },
   { Icon: Database, x: 60, y: 85, delay: 3.5 },
   { Icon: Code, x: 50, y: 10, delay: 1 },
+  { Icon: BrainCircuit, x: 30, y: 60, delay: 2.8 },
 ];
 
 export default function FloatingIcons() {
