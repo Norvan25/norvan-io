@@ -220,7 +220,7 @@ export default function Tesseract() {
       return `rgb(${r},${g},${b})`;
     }
 
-    const PHASE = { ORIGIN: { start: 0, end: 1 }, CORE: { start: 1, end: 2.5 }, STRUCTURE: { start: 2.5, end: 5 }, COLORS: { start: 5, end: 8 }, TRANSCEND: { start: 8, end: 12 } };
+    const PHASE = { ORIGIN: 1, CORE: 2.5, STRUCTURE: 5, COLORS: 8, TRANSCEND: 12 };
 
     const render = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -237,19 +237,19 @@ export default function Tesseract() {
 
       ctx.clearRect(0, 0, width, height);
 
-      const originProgress = easeOutCubic(getPhaseProgress(currentTime, PHASE.ORIGIN));
-      const coreProgress = easeOutCubic(getPhaseProgress(currentTime, PHASE.CORE));
-      const structureProgress = easeOutCubic(getPhaseProgress(currentTime, PHASE.STRUCTURE));
-      const colorProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.COLORS));
-      const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.TRANSCEND));
+      const originProgress = easeOutCubic(getPhaseProgress(currentTime, { start: 0, end: PHASE.ORIGIN }));
+      const coreProgress = easeOutCubic(getPhaseProgress(currentTime, { start: PHASE.ORIGIN, end: PHASE.CORE }));
+      const structureProgress = easeOutCubic(getPhaseProgress(currentTime, { start: PHASE.CORE, end: PHASE.STRUCTURE }));
+      const colorProgress = easeInOutSine(getPhaseProgress(currentTime, { start: PHASE.STRUCTURE, end: PHASE.COLORS }));
+      const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, { start: PHASE.COLORS, end: PHASE.TRANSCEND }));
 
       let morph3D = transcendProgress;
-      const coreFade = currentTime >= PHASE.COLORS ?
-        Math.max(0, 1 - (currentTime - PHASE.COLORS) / 2) : 1;
+      const coreFade = currentTime >= PHASE.TRANSCEND ?
+        Math.max(0, 1 - (currentTime - PHASE.TRANSCEND) / 2) : 1;
 
       let aXW = 0, aYW = 0, aZW = 0;
-      if (currentTime >= PHASE.COLORS) {
-        const rotTime = currentTime - PHASE.COLORS;
+      if (currentTime >= PHASE.TRANSCEND) {
+        const rotTime = currentTime - PHASE.TRANSCEND;
         aXW = rotTime * 0.3 + Math.sin(rotTime * 0.2) * 0.5;
         aYW = rotTime * 0.2 + Math.cos(rotTime * 0.15) * 0.4;
         aZW = rotTime * 0.15 + Math.sin(rotTime * 0.25) * 0.3;
