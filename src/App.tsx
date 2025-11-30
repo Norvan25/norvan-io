@@ -8,6 +8,7 @@ import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
 import GlobalCommandArray from './components/UI/GlobalCommandArray';
 import VoiceHUD from './components/UI/VoiceHUD';
+import FloatingIcons from './components/UI/FloatingIcons';
 
 const DIMENSIONS = [
   {
@@ -108,6 +109,7 @@ function App() {
         />
 
         <StarField />
+        <FloatingIcons />
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0A1628_100%)] opacity-60" />
       </div>
