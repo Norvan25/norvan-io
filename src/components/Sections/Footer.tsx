@@ -1,4 +1,4 @@
-import { Linkedin, Mail, Phone, MapPin, Instagram, Twitter, MessageCircle } from "lucide-react";
+import { Linkedin, Facebook, Youtube, Instagram, Twitter, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import ActionTrinity from "../UI/ActionTrinity";
 
 export default function Footer() {
@@ -12,8 +12,10 @@ export default function Footer() {
 
   const socialLinks = [
     { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "X / Twitter" },
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Youtube, href: "#", label: "YouTube" },
     { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Twitter, href: "#", label: "X / Twitter" },
     { icon: MessageCircle, href: "https://wa.me/60196069033", label: "WhatsApp" },
   ];
 
@@ -37,7 +39,7 @@ export default function Footer() {
             </div>
 
             {/* SOCIAL SIGNAL */}
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-3">
               {socialLinks.map((social, idx) => (
                 <a
                   key={idx}
