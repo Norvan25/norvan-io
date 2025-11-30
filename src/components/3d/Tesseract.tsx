@@ -10,11 +10,7 @@ export default function Tesseract() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = canvas.width = canvas.clientWidth;
-    let height = canvas.height = canvas.clientHeight;
-    let centerX = width / 2;
-    let centerY = height / 2;
-    let scale = Math.min(width, height) * 0.35;
+    let width: number, height: number, centerX: number, centerY: number, scale: number;
     let startTime: number | null = null;
     let viewAngle = 0;
     let animationFrameId: number;
@@ -30,14 +26,22 @@ export default function Tesseract() {
       bg: 'rgba(0,0,0,0)'
     };
 
-    function hexToRgb(hex: string) {
+    function resize() {
+      width = canvas.width = canvas.clientWidth;
+      height = canvas.height = canvas.clientHeight;
+      centerX = width / 2;
+      centerY = height / 2;
+      scale = Math.min(width, height) * 0.35;
+    }
+
+    function hexToRgb(hex: string): {r: number, g: number, b: number} {
       const r = parseInt(hex.slice(1,3), 16);
       const g = parseInt(hex.slice(3,5), 16);
       const b = parseInt(hex.slice(5,7), 16);
       return { r, g, b };
     }
 
-    function projectB4(v: number[]) {
+    function projectB4(v: number[]): {x: number, y: number} {
       const pi8 = Math.PI / 8;
       const e1 = [Math.cos(pi8), Math.cos(3*pi8), Math.cos(5*pi8), Math.cos(7*pi8)];
       const e2 = [Math.sin(pi8), Math.sin(3*pi8), Math.sin(5*pi8), Math.sin(7*pi8)];
@@ -46,42 +50,42 @@ export default function Tesseract() {
       return { x: x * 0.55, y: y * 0.55 };
     }
 
-    function rotateXW(p: number[], a: number) {
+    function rotateXW(p: number[], a: number): number[] {
       const c = Math.cos(a), s = Math.sin(a);
       return [p[0]*c - p[3]*s, p[1], p[2], p[0]*s + p[3]*c];
     }
-    function rotateYW(p: number[], a: number) {
+    function rotateYW(p: number[], a: number): number[] {
       const c = Math.cos(a), s = Math.sin(a);
       return [p[0], p[1]*c - p[3]*s, p[2], p[1]*s + p[3]*c];
     }
-    function rotateZW(p: number[], a: number) {
+    function rotateZW(p: number[], a: number): number[] {
       const c = Math.cos(a), s = Math.sin(a);
       return [p[0], p[1], p[2]*c - p[3]*s, p[2]*s + p[3]*c];
     }
 
-    function project4Dto3D(v: number[]) {
+    function project4Dto3D(v: number[]): {x: number, y: number, z: number} {
       const d = 2.5;
       const s = d / (d - v[3] * 0.4);
       return { x: v[0] * s, y: v[1] * s, z: v[2] * s };
     }
 
-    function easeOutCubic(t: number) { return 1 - Math.pow(1 - t, 3); }
-    function easeInOutSine(t: number) { return -(Math.cos(Math.PI * t) - 1) / 2; }
-    function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+    function easeOutCubic(t: number): number { return 1 - Math.pow(1 - t, 3); }
+    function easeInOutSine(t: number): number { return -(Math.cos(Math.PI * t) - 1) / 2; }
+    function lerp(a: number, b: number, t: number): number { return a + (b - a) * t; }
 
-    function getPhaseProgress(time: number, phase: {start: number, end: number}) {
+    function getPhaseProgress(time: number, phase: {start: number, end: number}): number {
       if (time < phase.start) return 0;
       if (time > phase.end) return 1;
       return (time - phase.start) / (phase.end - phase.start);
     }
 
-    function lineIntersection(p1: any, p2: any, p3: any, p4: any) {
-       const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
-       const x3 = p3.x, y3 = p3.y, x4 = p4.x, y4 = p4.y;
-       const denom = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4);
-       if (Math.abs(denom) < 0.0001) return null;
-       const t = ((x1-x3)*(y3-y4) - (y1-y3)*(x3-x4)) / denom;
-       return { x: x1 + t*(x2-x1), y: y1 + t*(y2-y1) };
+    function lineIntersection(p1: any, p2: any, p3: any, p4: any): {x: number, y: number} | null {
+        const x1 = p1.x, y1 = p1.y, x2 = p2.x, y2 = p2.y;
+        const x3 = p3.x, y3 = p3.y, x4 = p4.x, y4 = p4.y;
+        const denom = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4);
+        if (Math.abs(denom) < 0.0001) return null;
+        const t = ((x1-x3)*(y3-y4) - (y1-y3)*(x3-x4)) / denom;
+        return { x: x1 + t*(x2-x1), y: y1 + t*(y2-y1) };
     }
 
     const vertices4D: number[][] = [];
@@ -139,7 +143,7 @@ export default function Tesseract() {
       }
     }
 
-    function getTesseractFaceColor(faceIndices: number[]) {
+    function getTesseractFaceColor(faceIndices: number[]): string {
       const pts = faceIndices.map(i => vertices4D[i]);
       if (pts.every(p => p[3] === pts[0][3])) return COLORS.norX;
       if (pts.every(p => p[0] === pts[0][0])) return COLORS.norY;
@@ -148,7 +152,7 @@ export default function Tesseract() {
       return COLORS.norX;
     }
 
-    function getEdgeColor(i: number, j: number, colorProgress: number, use3DColors = false) {
+    function getEdgeColor(i: number, j: number, colorProgress: number, use3DColors = false): string {
       if (use3DColors) {
         const v1 = vertices4D[i];
         const v2 = vertices4D[j];
@@ -188,7 +192,7 @@ export default function Tesseract() {
       return `rgb(${r},${g},${b})`;
     }
 
-    function getVertexColor(i: number, colorProgress: number, use3DColors = false) {
+    function getVertexColor(i: number, colorProgress: number, use3DColors = false): string {
       if (use3DColors) {
         const v = vertices4D[i];
         if (v[3] !== 0) return COLORS.norX;
@@ -220,7 +224,7 @@ export default function Tesseract() {
       return `rgb(${r},${g},${b})`;
     }
 
-    const PHASE = { ORIGIN: 1, CORE: 2.5, STRUCTURE: 5, COLORS: 8, TRANSCEND: 12 };
+    const PHASE = { ORIGIN: { start: 0, end: 1 }, CORE: { start: 1, end: 2.5 }, STRUCTURE: { start: 2.5, end: 5 }, COLORS: { start: 5, end: 8 }, TRANSCEND: { start: 8, end: 12 } };
 
     const render = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -228,28 +232,24 @@ export default function Tesseract() {
       const currentTime = time;
 
       if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
-         width = canvas.width = canvas.clientWidth;
-         height = canvas.height = canvas.clientHeight;
-         centerX = width / 2;
-         centerY = height / 2;
-         scale = Math.min(width, height) * 0.35;
+         resize();
       }
 
-      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = COLORS.bg;
+      ctx.fillRect(0, 0, width, height);
 
-      const originProgress = easeOutCubic(getPhaseProgress(currentTime, { start: 0, end: PHASE.ORIGIN }));
-      const coreProgress = easeOutCubic(getPhaseProgress(currentTime, { start: PHASE.ORIGIN, end: PHASE.CORE }));
-      const structureProgress = easeOutCubic(getPhaseProgress(currentTime, { start: PHASE.CORE, end: PHASE.STRUCTURE }));
-      const colorProgress = easeInOutSine(getPhaseProgress(currentTime, { start: PHASE.STRUCTURE, end: PHASE.COLORS }));
-      const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, { start: PHASE.COLORS, end: PHASE.TRANSCEND }));
+      const originProgress = easeOutCubic(getPhaseProgress(currentTime, PHASE.ORIGIN));
+      const coreProgress = easeOutCubic(getPhaseProgress(currentTime, PHASE.CORE));
+      const structureProgress = easeOutCubic(getPhaseProgress(currentTime, PHASE.STRUCTURE));
+      const colorProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.COLORS));
+      const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.TRANSCEND));
 
       let morph3D = transcendProgress;
-      const coreFade = currentTime >= PHASE.COLORS ?
-        Math.max(0, 1 - (currentTime - PHASE.COLORS) / 2) : 1;
+      const coreFade = currentTime >= PHASE.TRANSCEND.start ? Math.max(0, 1 - (currentTime - PHASE.TRANSCEND.start) / 2) : 1;
 
       let aXW = 0, aYW = 0, aZW = 0;
-      if (currentTime >= PHASE.COLORS) {
-        const rotTime = currentTime - PHASE.COLORS;
+      if (currentTime >= PHASE.TRANSCEND.start) {
+        const rotTime = currentTime - PHASE.TRANSCEND.start;
         aXW = rotTime * 0.3 + Math.sin(rotTime * 0.2) * 0.5;
         aYW = rotTime * 0.2 + Math.cos(rotTime * 0.15) * 0.4;
         aZW = rotTime * 0.15 + Math.sin(rotTime * 0.25) * 0.3;
@@ -292,6 +292,7 @@ export default function Tesseract() {
       if (originProgress > 0 && coreProgress < 1) {
         const pointSize = originProgress * 8 * (1 - coreProgress);
         const glowSize = pointSize * 3;
+
         const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
         glow.addColorStop(0, 'rgba(102, 211, 250, 0.8)');
         glow.addColorStop(1, 'rgba(102, 211, 250, 0)');
@@ -324,11 +325,29 @@ export default function Tesseract() {
       if (morph3D > 0) {
         const sortedFaces = tesseractFaces.map(face => {
           const avgZ = face.reduce((sum, vi) => sum + projected[vi].z, 0) / 4;
-          return { vertices: face, avgZ, color: getTesseractFaceColor(face) };
+          const p0 = projected[face[0]];
+          const p1 = projected[face[1]];
+          const p2 = projected[face[2]];
+          const v1 = { x: p1.x - p0.x, y: p1.y - p0.y };
+          const v2 = { x: p2.x - p0.x, y: p2.y - p0.y };
+          const zNormal = (v1.x * v2.y - v1.y * v2.x) > 0 ? 1 : -1;
+          return { vertices: face, avgZ, color: getTesseractFaceColor(face), zNormal };
         }).sort((a, b) => a.avgZ - b.avgZ);
 
-        const face3DAlpha = 0.3 * morph3D;
+        const baseAlpha = 0.35 * morph3D;
+
         sortedFaces.forEach(face => {
+          const faceColor = face.color;
+          const rgb = hexToRgb(faceColor.startsWith('#') ? faceColor : COLORS.norX);
+          const { r, g, b } = rgb;
+
+          const cx = face.vertices.reduce((sum, vi) => sum + projected[vi].x, 0) / 4;
+          const cy = face.vertices.reduce((sum, vi) => sum + projected[vi].y, 0) / 4;
+
+          const pulse = 0.8 + 0.2 * Math.sin(currentTime * 2);
+          const depthFactor = Math.max(0.3, Math.min(1, 0.5 + face.zNormal * 0.5));
+          const alpha = baseAlpha * depthFactor * pulse;
+
           ctx.beginPath();
           ctx.moveTo(projected[face.vertices[0]].x, projected[face.vertices[0]].y);
           for (let i = 1; i < face.vertices.length; i++) {
@@ -336,10 +355,28 @@ export default function Tesseract() {
           }
           ctx.closePath();
 
-          ctx.fillStyle = face.color;
-          ctx.globalAlpha = face3DAlpha;
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.15})`;
           ctx.fill();
-          ctx.globalAlpha = 1;
+
+          const maxDist = Math.max(...face.vertices.map(vi => Math.sqrt(Math.pow(projected[vi].x - cx, 2) + Math.pow(projected[vi].y - cy, 2))));
+          const gradient = ctx.createRadialGradient(cx - maxDist * 0.3, cy - maxDist * 0.3, 0, cx, cy, maxDist * 1.2);
+          gradient.addColorStop(0, `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${alpha * 0.15})`);
+          gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${alpha * 0.0})`);
+
+          ctx.beginPath();
+          ctx.moveTo(projected[face.vertices[0]].x, projected[face.vertices[0]].y);
+          for (let i = 1; i < face.vertices.length; i++) ctx.lineTo(projected[face.vertices[i]].x, projected[face.vertices[i]].y);
+          ctx.closePath();
+          ctx.fillStyle = gradient;
+          ctx.fill();
+
+          ctx.save();
+          ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${alpha * 1.0})`;
+          ctx.shadowBlur = 8;
+          ctx.strokeStyle = `rgba(${Math.min(255, r + 100)}, ${Math.min(255, g + 100)}, ${Math.min(255, b + 100)}, ${alpha * 0.4})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.restore();
         });
       }
 
@@ -358,7 +395,7 @@ export default function Tesseract() {
         });
 
         if (coreSize > 0.1) {
-          const maxDist = Math.max(...innerOctagon.map(p => Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2)));
+          const maxDist = Math.max(...innerOctagon.map(p => Math.sqrt(Math.pow(p.x - cx, 2) + Math.pow(p.y - cy, 2))));
           const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxDist);
           gradient.addColorStop(0, COLORS.norV);
           gradient.addColorStop(1, COLORS.norVDark);
@@ -396,12 +433,26 @@ export default function Tesseract() {
             const endX = lerp(centerX, projected[j].x, edgeProgress);
             const endY = lerp(centerY, projected[j].y, edgeProgress);
 
-            ctx.beginPath();
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(endX, endY);
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            if (morph3D > 0) {
+              const rgb = hexToRgb(color.startsWith('#') ? color : COLORS.norX);
+              ctx.save();
+              ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
+              ctx.shadowBlur = 6;
+              ctx.beginPath();
+              ctx.moveTo(startX, startY);
+              ctx.lineTo(endX, endY);
+              ctx.strokeStyle = color;
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.restore();
+            } else {
+              ctx.beginPath();
+              ctx.moveTo(startX, startY);
+              ctx.lineTo(endX, endY);
+              ctx.strokeStyle = color;
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            }
           }
         });
       }
@@ -417,10 +468,13 @@ export default function Tesseract() {
            if (vertProgress > 0) {
              const use3DColors = morph3D >= 1;
              const color = getVertexColor(i, colorProgress, use3DColors);
-             const radius = 6.9 * vertProgress;
+
+             const baseRadius = 6.9 * 0.85;
+             const radius = baseRadius * vertProgress;
+
              const glowRadius = radius * 3;
 
-             const rgb = hexToRgb(color.startsWith('#') ? color : '#ffffff');
+             const rgb = hexToRgb(color.startsWith('#') ? color : COLORS.norX);
              const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowRadius);
              glow.addColorStop(0, `rgba(${rgb.r},${rgb.g},${rgb.b},0.6)`);
              glow.addColorStop(1, `rgba(${rgb.r},${rgb.g},${rgb.b},0)`);
@@ -441,10 +495,20 @@ export default function Tesseract() {
       animationFrameId = requestAnimationFrame(render);
     };
 
+    resize();
+    const resizeListener = () => resize();
+    window.addEventListener('resize', resizeListener);
     animationFrameId = requestAnimationFrame(render);
 
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => {
+      window.removeEventListener('resize', resizeListener);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
-  return <canvas ref={canvasRef} className="w-full h-full block" />;
+  return (
+    <div className="absolute inset-0 w-full h-full">
+      <canvas ref={canvasRef} className="w-full h-full block" />
+    </div>
+  );
 }
