@@ -18,6 +18,26 @@ export function useNorVoice() {
   const [isLoading, setIsLoading] = useState(false);
 
   const isMounted = useRef(true);
+  const wakeLock = useRef<any>(null);
+
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock.current = await (navigator as any).wakeLock.request('screen');
+        console.log('NorVoice: Screen Wake Lock Active');
+      }
+    } catch (err) {
+      console.warn('NorVoice: Wake Lock not supported or blocked', err);
+    }
+  };
+
+  const releaseWakeLock = async () => {
+    if (wakeLock.current) {
+      await wakeLock.current.release();
+      wakeLock.current = null;
+      console.log('NorVoice: Screen Wake Lock Released');
+    }
+  };
 
   useEffect(() => {
     isMounted.current = true;
@@ -28,6 +48,7 @@ export function useNorVoice() {
       if (isMounted.current) {
         setIsSessionActive(true);
         setIsLoading(false);
+        requestWakeLock();
       }
     };
 
@@ -37,6 +58,7 @@ export function useNorVoice() {
         setIsSessionActive(false);
         setIsSpeaking(false);
         setIsLoading(false);
+        releaseWakeLock();
       }
     };
 
@@ -53,6 +75,7 @@ export function useNorVoice() {
       if (isMounted.current) {
         setIsSessionActive(false);
         setIsLoading(false);
+        releaseWakeLock();
       }
     };
 
@@ -65,6 +88,7 @@ export function useNorVoice() {
     return () => {
       isMounted.current = false;
       vapi.removeAllListeners();
+      releaseWakeLock();
     };
   }, []);
 
