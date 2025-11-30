@@ -3,9 +3,7 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Float, Environment, PerspectiveCamera, Edges, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 
-function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
-  const meshRef = useRef<THREE.Group>(null);
-
+function TextureFace({ iconPath, color }: { iconPath: string; color: string }) {
   const texture = useLoader(THREE.TextureLoader, iconPath);
 
   useMemo(() => {
@@ -16,6 +14,20 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
     texture.generateMipmaps = false;
   }, [texture]);
 
+  return (
+    <meshBasicMaterial
+      map={texture}
+      transparent
+      opacity={1}
+      side={THREE.FrontSide}
+      toneMapped={false}
+    />
+  );
+}
+
+function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
+  const meshRef = useRef<THREE.Group>(null);
+
   useFrame((state, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.x += delta * 0.2;
@@ -25,33 +37,38 @@ function CubeMesh({ iconPath, color }: { iconPath: string; color: string }) {
 
   return (
     <group ref={meshRef}>
+
+      {/* LAYER 1: PREMIUM GLASS BODY */}
       <RoundedBox args={[3.5, 3.5, 3.5]} radius={0.25} smoothness={4}>
-        <meshPhysicalMaterial
-          color={color}
-          transparent
-          opacity={0.15}
-          transmission={0}
-          roughness={0.1}
-          metalness={0}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-        />
+         <meshPhysicalMaterial
+            color={color}
+            transparent
+            opacity={1}
+            transmission={0.95}
+            thickness={3}
+            roughness={0}
+            clearcoat={1}
+            clearcoatRoughness={0}
+            ior={1.5}
+            metalness={0.1}
+            side={THREE.DoubleSide}
+            depthWrite={false}
+         />
       </RoundedBox>
 
+      {/* LAYER 2: ICON OVERLAY (Floating Inside) */}
       <RoundedBox args={[3.51, 3.51, 3.51]} radius={0.25} smoothness={4}>
-        <meshBasicMaterial
-          map={texture}
-          transparent
-          opacity={1}
-          side={THREE.FrontSide}
-          toneMapped={false}
-        />
+         <Suspense fallback={null}>
+            <TextureFace iconPath={iconPath} color={color} />
+         </Suspense>
       </RoundedBox>
 
+      {/* LAYER 3: NEON EDGES (Thinner & Brighter) */}
       <RoundedBox args={[3.5, 3.5, 3.5]} radius={0.25} smoothness={4}>
-        <meshBasicMaterial visible={false} />
-        <Edges threshold={30} color={color} linewidth={2} />
+         <meshBasicMaterial visible={false} />
+         <Edges threshold={30} color={color} linewidth={1} scale={1.01} />
       </RoundedBox>
+
     </group>
   );
 }
