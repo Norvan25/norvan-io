@@ -27,7 +27,7 @@ export default function Tesseract() {
       norV: '#66d3fa',
       norVDark: '#007acc',
       edge: '#2a2f40',
-      bg: 'transparent'
+      bg: 'rgba(0,0,0,0)'
     };
 
     function hexToRgb(hex: string) {
@@ -225,6 +225,7 @@ export default function Tesseract() {
     const render = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const time = (timestamp - startTime) / 1000;
+      const currentTime = time;
 
       if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
          width = canvas.width = canvas.clientWidth;
@@ -236,18 +237,19 @@ export default function Tesseract() {
 
       ctx.clearRect(0, 0, width, height);
 
-      const originProgress = easeOutCubic(getPhaseProgress(time, { start: 0, end: PHASE.ORIGIN }));
-      const coreProgress = easeOutCubic(getPhaseProgress(time, { start: PHASE.ORIGIN, end: PHASE.CORE }));
-      const structureProgress = easeOutCubic(getPhaseProgress(time, { start: PHASE.CORE, end: PHASE.STRUCTURE }));
-      const colorProgress = easeInOutSine(getPhaseProgress(time, { start: PHASE.STRUCTURE, end: PHASE.COLORS }));
-      const transcendProgress = easeInOutSine(getPhaseProgress(time, { start: PHASE.COLORS, end: PHASE.TRANSCEND }));
+      const originProgress = easeOutCubic(getPhaseProgress(currentTime, { start: 0, end: PHASE.ORIGIN }));
+      const coreProgress = easeOutCubic(getPhaseProgress(currentTime, { start: PHASE.ORIGIN, end: PHASE.CORE }));
+      const structureProgress = easeOutCubic(getPhaseProgress(currentTime, { start: PHASE.CORE, end: PHASE.STRUCTURE }));
+      const colorProgress = easeInOutSine(getPhaseProgress(currentTime, { start: PHASE.STRUCTURE, end: PHASE.COLORS }));
+      const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, { start: PHASE.COLORS, end: PHASE.TRANSCEND }));
 
       let morph3D = transcendProgress;
-      const coreFade = time >= PHASE.COLORS ? Math.max(0, 1 - (time - PHASE.COLORS) / 2) : 1;
+      const coreFade = currentTime >= PHASE.COLORS ?
+        Math.max(0, 1 - (currentTime - PHASE.COLORS) / 2) : 1;
 
       let aXW = 0, aYW = 0, aZW = 0;
-      if (time >= PHASE.COLORS) {
-        const rotTime = time - PHASE.COLORS;
+      if (currentTime >= PHASE.COLORS) {
+        const rotTime = currentTime - PHASE.COLORS;
         aXW = rotTime * 0.3 + Math.sin(rotTime * 0.2) * 0.5;
         aYW = rotTime * 0.2 + Math.cos(rotTime * 0.15) * 0.4;
         aZW = rotTime * 0.15 + Math.sin(rotTime * 0.25) * 0.3;
