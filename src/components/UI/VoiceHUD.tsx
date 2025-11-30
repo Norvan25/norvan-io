@@ -42,7 +42,7 @@ export default function VoiceHUD() {
             </div>
 
             <h2 className="text-lg md:text-xl font-bold font-mono text-white tracking-wider">
-              {isLoading ? "CONNECTING TO INTELLIGENCE..." : "NORAYR LISTENING"}
+              {isLoading ? "CONNECTING TO NEXUS..." : "NORVAN NEXUS ONLINE"}
             </h2>
           </div>
 
