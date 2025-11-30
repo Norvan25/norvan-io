@@ -7,6 +7,7 @@ import DimensionSection from './components/Sections/DimensionSection';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
 import GlobalCommandArray from './components/UI/GlobalCommandArray';
+import VoiceHUD from './components/UI/VoiceHUD';
 
 const DIMENSIONS = [
   {
@@ -132,6 +133,7 @@ function App() {
       </div>
 
       <GlobalCommandArray />
+      <VoiceHUD />
 
     </div>
   );
