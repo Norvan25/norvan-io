@@ -4,6 +4,7 @@ import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
 import Header from './components/UI/Header';
 import IntelligencePortfolio from './components/Sections/IntelligencePortfolio';
+import IndustryEcosystem from './components/Sections/IndustryEcosystem';
 import DimensionSection from './components/Sections/DimensionSection';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
@@ -117,6 +118,8 @@ function App() {
           {DIMENSIONS.map((dim, i) => (
             <DimensionSection key={dim.id} index={i} {...dim} />
           ))}
+
+          <IndustryEcosystem />
 
           <Footer />
         </div>
