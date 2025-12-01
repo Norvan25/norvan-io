@@ -10,7 +10,6 @@ import DimensionSection from './components/Sections/DimensionSection';
 import Testimonials from './components/Sections/Testimonials';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
-import GlobalCommandArray from './components/UI/GlobalCommandArray';
 import VoiceHUD from './components/UI/VoiceHUD';
 import FloatingIcons from './components/UI/FloatingIcons';
 
@@ -132,7 +131,6 @@ function App() {
 
       </div>
 
-      <GlobalCommandArray />
       <VoiceHUD />
 
     </div>
