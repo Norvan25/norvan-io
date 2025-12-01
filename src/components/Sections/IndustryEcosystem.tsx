@@ -22,7 +22,7 @@ const Card = ({ title, tagline, Icon, color, index }: typeof industries[0] & { i
       whileInView={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true, margin: "-100px" }}
-      className="p-6 rounded-xl bg-black/40 backdrop-blur-lg border border-white/10 hover:border-[#00A6FB]/50 transition-all duration-300 flex flex-col gap-4 group cursor-default relative overflow-hidden hover:shadow-[0_0_25px_rgba(0,166,251,0.1)]]"
+      className="p-6 rounded-xl bg-black/40 backdrop-blur-lg border border-white/10 hover:border-[#00A6FB]/50 transition-all duration-300 flex flex-col gap-4 group cursor-default relative overflow-hidden hover:shadow-[0_0_25px_rgba(0,166,251,0.1)]"
     >
       <div className="flex items-center justify-between">
         <Icon
