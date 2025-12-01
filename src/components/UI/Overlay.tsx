@@ -18,14 +18,9 @@ export default function Overlay() {
   };
 
   return (
-    <div className="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none">
-
-      <div className="h-20" />
-
-      <div className="flex-1"></div>
-
-      <div className="relative w-full pb-16 md:pb-24 pointer-events-auto">
-        <div className="container mx-auto px-2 sm:px-6">
+    <>
+      <div className="fixed bottom-16 md:bottom-24 left-0 right-0 z-50 pointer-events-none">
+        <div className="container mx-auto px-2 sm:px-6 pointer-events-auto">
           <div className="flex justify-center md:justify-start gap-1.5 md:gap-6">
 
             <button
@@ -71,6 +66,6 @@ export default function Overlay() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
