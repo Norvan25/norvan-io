@@ -25,15 +25,15 @@ export default function Overlay() {
       <div className="flex-1"></div>
 
       <div className="relative w-full pb-16 md:pb-24 pointer-events-auto">
-        <div className="container mx-auto px-6">
-          <div className="flex justify-center md:justify-start flex-wrap gap-3 md:gap-6">
+        <div className="container mx-auto px-2 sm:px-6">
+          <div className="flex justify-center md:justify-start gap-2 md:gap-6 overflow-x-auto">
 
             <button
               onClick={toggleVoice}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               disabled={isLoading}
-              className={`group relative flex items-center justify-center gap-2 px-6 py-3 rounded-full transition-all duration-300 border
+              className={`group relative flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-6 py-2.5 md:py-3 rounded-full transition-all duration-300 border flex-shrink-0
                 ${isLoading
                    ? 'border-yellow-500 bg-yellow-500/10 text-yellow-400 cursor-wait'
                    : isSessionActive
@@ -43,27 +43,27 @@ export default function Overlay() {
                 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(0,166,251,0.2)]
               `}
             >
-              <Mic className={`w-5 h-5 transition-transform ${isSessionActive ? 'animate-pulse text-red-400' : 'text-[#00A6FB] group-hover:text-white'}`} />
-              <span className="text-sm font-mono font-normal tracking-wider whitespace-nowrap">
+              <Mic className={`w-4 md:w-5 h-4 md:h-5 transition-transform ${isSessionActive ? 'animate-pulse text-red-400' : 'text-[#00A6FB] group-hover:text-white'}`} />
+              <span className="text-xs md:text-sm font-mono font-normal tracking-wide md:tracking-wider whitespace-nowrap">
                 {getVoiceButtonText()}
               </span>
             </button>
 
             <button
-              className="group relative flex items-center justify-center gap-2 px-6 py-3 rounded-full transition-all duration-300 border border-white/20 bg-white/5 hover:border-[#009E60] hover:bg-[#009E60]/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(0,158,96,0.2)]"
+              className="group relative flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-6 py-2.5 md:py-3 rounded-full transition-all duration-300 border border-white/20 bg-white/5 hover:border-[#009E60] hover:bg-[#009E60]/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(0,158,96,0.2)] flex-shrink-0"
             >
-              <MessageSquareCode className="w-5 h-5 text-[#009E60] group-hover:text-white" />
-              <span className="text-sm font-mono font-normal tracking-wider whitespace-nowrap">
+              <MessageSquareCode className="w-4 md:w-5 h-4 md:h-5 text-[#009E60] group-hover:text-white" />
+              <span className="text-xs md:text-sm font-mono font-normal tracking-wide md:tracking-wider whitespace-nowrap">
                 CHAT WITH NEXUS
               </span>
             </button>
 
             <button
               onClick={handleBooking}
-              className="group relative flex items-center justify-center gap-2 px-6 py-3 rounded-full transition-all duration-300 border border-[#F28500] bg-[#F28500]/20 text-white shadow-[0_0_25px_rgba(242,133,0,0.3)] hover:shadow-[0_0_35px_rgba(242,133,0,0.6)]"
+              className="group relative flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-6 py-2.5 md:py-3 rounded-full transition-all duration-300 border border-[#F28500] bg-[#F28500]/20 text-white shadow-[0_0_25px_rgba(242,133,0,0.3)] hover:shadow-[0_0_35px_rgba(242,133,0,0.6)] flex-shrink-0"
             >
-              <CalendarCheck className="w-5 h-5 text-white" />
-              <span className="text-sm font-mono font-normal tracking-wider whitespace-nowrap">
+              <CalendarCheck className="w-4 md:w-5 h-4 md:h-5 text-white" />
+              <span className="text-xs md:text-sm font-mono font-normal tracking-wide md:tracking-wider whitespace-nowrap">
                 BOOK A BRIEFING
               </span>
             </button>
