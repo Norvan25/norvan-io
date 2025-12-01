@@ -1,6 +1,6 @@
-import { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export default function StarBackground() {
+const StarBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -9,76 +9,56 @@ export default function StarBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = 0, height = 0, cx = 0, cy = 0;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
 
-    const STAR_COUNT = 900;
-    const SPEED = 0.02;
-    const COLORS = ["#00A6FB", "#ffffff", "#7F4FC9", "#F28500"];
+    const stars: { x: number; y: number; r: number; alpha: number; d: number }[] = [];
+    const numStars = 200;
 
-    const stars: { x: number; y: number; z: number; color: string }[] = [];
-
-    const initStars = () => {
-      stars.length = 0;
-      for (let i = 0; i < STAR_COUNT; i++) {
-        stars.push({
-          x: (Math.random() - 0.5) * 2,
-          y: (Math.random() - 0.5) * 2,
-          z: Math.random(),
-          color: COLORS[Math.floor(Math.random() * COLORS.length)]
-        });
-      }
-    };
-
-    const resize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      cx = width / 2;
-      cy = height / 2;
-    };
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 2,
+        alpha: Math.random(),
+        d: Math.random() * 0.01 * (Math.random() > 0.5 ? 1 : -1),
+      });
+    }
 
     const animate = () => {
-      ctx.fillStyle = "#0A1628";
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#020617'; // slate-950
       ctx.fillRect(0, 0, width, height);
 
       stars.forEach((star) => {
-        star.z -= SPEED * 0.05;
-
-        if (star.z <= 0) {
-          star.z = 1;
-          star.x = (Math.random() - 0.5) * 2;
-          star.y = (Math.random() - 0.5) * 2;
-        }
-
-        const scale = 1 / star.z;
-        const x2d = star.x * scale * width * 0.5 + cx;
-        const y2d = star.y * scale * height * 0.5 + cy;
-
-        const size = (1 - star.z) * 1.5;
-
-        if (x2d >= 0 && x2d <= width && y2d >= 0 && y2d <= height) {
-          ctx.beginPath();
-          ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
-          ctx.fillStyle = star.color;
-          ctx.fill();
-        }
+        star.alpha += star.d;
+        if (star.alpha <= 0 || star.alpha >= 1) star.d *= -1;
+        
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+        ctx.fill();
       });
 
       requestAnimationFrame(animate);
     };
 
-    window.addEventListener('resize', resize);
-    initStars();
-    resize();
     animate();
 
-    return () => window.removeEventListener('resize', resize);
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 0 }}
-    />
-  );
-}
+  return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none" />;
+};
+
+export default StarBackground;
