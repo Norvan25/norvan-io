@@ -5,6 +5,7 @@ import Overlay from './components/UI/Overlay';
 import Header from './components/UI/Header';
 import IntelligencePortfolio from './components/Sections/IntelligencePortfolio';
 import IndustryEcosystem from './components/Sections/IndustryEcosystem';
+import PerformanceMatrix from './components/Sections/PerformanceMatrix';
 import DimensionSection from './components/Sections/DimensionSection';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
@@ -120,6 +121,8 @@ function App() {
           ))}
 
           <IndustryEcosystem />
+
+          <PerformanceMatrix />
 
           <Footer />
         </div>
