@@ -6,16 +6,21 @@ export default function Tesseract() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     let width: number, height: number, centerX: number, centerY: number, scale: number;
     let isMobile = false;
 
     function resize() {
-      const dpr = window.devicePixelRatio || 1;
       const rectWidth = window.innerWidth;
       const rectHeight = window.innerHeight;
+      
+      isMobile = rectWidth < 768;
+      
+      // CRITICAL: Cap DPR on mobile to reduce pixel count dramatically
+      // Mobile phones often have 3x DPR which means 9x more pixels!
+      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : (window.devicePixelRatio || 1);
 
       canvas.width = rectWidth * dpr;
       canvas.height = rectHeight * dpr;
@@ -31,7 +36,6 @@ export default function Tesseract() {
       centerX = width / 2;
       centerY = height / 2;
 
-      isMobile = width < 768;
       const multiplier = isMobile ? 0.30 : 0.22;
       scale = Math.min(width, height) * multiplier;
     }
@@ -47,7 +51,15 @@ export default function Tesseract() {
       bg: '#0d1326'
     };
 
-    // Helper to parse hex color to RGB
+    // Pre-computed RGB values to avoid parsing in render loop
+    const RGB = {
+      norX: { r: 0, g: 127, b: 255 },
+      norY: { r: 127, g: 79, b: 201 },
+      norZ: { r: 242, g: 133, b: 0 },
+      norW: { r: 0, g: 158, b: 96 },
+      norV: { r: 102, g: 211, b: 250 }
+    };
+
     function hexToRgb(hex: string): { r: number; g: number; b: number } {
       const r = parseInt(hex.slice(1, 3), 16);
       const g = parseInt(hex.slice(3, 5), 16);
@@ -83,6 +95,7 @@ export default function Tesseract() {
       return { x: v[0] * s, y: v[1] * s, z: v[2] * s };
     }
 
+    // Pre-compute vertices
     const vertices4D: number[][] = [];
     for (let w = -1; w <= 1; w += 2) {
       for (let z = -1; z <= 1; z += 2) {
@@ -94,6 +107,7 @@ export default function Tesseract() {
       }
     }
 
+    // Pre-compute edges
     const edges: number[][] = [];
     for (let i = 0; i < 16; i++) {
       for (let j = i + 1; j < 16; j++) {
@@ -117,6 +131,7 @@ export default function Tesseract() {
     const norZFaces = [[11, 15, 14, 10], [9, 8, 12, 13]];
     const norWFaces = [[1, 9, 11, 3], [0, 8, 10, 2]];
 
+    // Pre-compute tesseract faces
     const tesseractFaces: number[][] = [];
     for (let i = 0; i < 16; i++) {
       for (let j = i + 1; j < 16; j++) {
@@ -145,14 +160,15 @@ export default function Tesseract() {
       }
     }
 
-    function getTesseractFaceColor(faceIndices: number[]) {
-      const pts = faceIndices.map(i => vertices4D[i]);
+    // Pre-compute face colors
+    const faceColors: string[] = tesseractFaces.map(face => {
+      const pts = face.map(i => vertices4D[i]);
       if (pts.every(p => p[3] === pts[0][3])) return COLORS.norX;
       if (pts.every(p => p[0] === pts[0][0])) return COLORS.norY;
       if (pts.every(p => p[1] === pts[0][1])) return COLORS.norZ;
       if (pts.every(p => p[2] === pts[0][2])) return COLORS.norW;
       return COLORS.norX;
-    }
+    });
 
     const norXEdges = [[8,0], [4,0], [0,1]];
     const norWEdgesOpacity = [[0,2]];
@@ -168,6 +184,7 @@ export default function Tesseract() {
     let startTime: number | null = null;
     let viewAngle = 0;
     let animationId: number;
+    let frameCount = 0;
 
     function easeOutCubic(t: number) { return 1 - Math.pow(1 - t, 3); }
     function easeInOutSine(t: number) { return -(Math.cos(Math.PI * t) - 1) / 2; }
@@ -218,142 +235,23 @@ export default function Tesseract() {
       else if (isNorW || isNorW2 || isNorWEdge) targetColor = COLORS.norW;
 
       if (colorProgress <= 0) return COLORS.edge;
-      if (colorProgress >= 1) return targetColor;
-
       return targetColor;
-    }
-
-    // ========== GLASS FACE RENDERING ==========
-    // Simplified version for mobile, full version for desktop
-    function drawGlassFace(
-      face: number[],
-      projected: { x: number; y: number; z: number }[],
-      color: string,
-      baseAlpha: number,
-      time: number,
-      zNormal: number
-    ) {
-      const { r, g, b } = hexToRgb(color);
-
-      // Face center
-      const cx = face.reduce((sum, vi) => sum + projected[vi].x, 0) / 4;
-      const cy = face.reduce((sum, vi) => sum + projected[vi].y, 0) / 4;
-
-      // Pulse glow
-      const pulse = 0.85 + 0.15 * Math.sin(time * 2);
-
-      // Depth-based transparency
-      const depthFactor = Math.max(0.3, Math.min(1, 0.5 + zNormal * 0.5));
-      const alpha = baseAlpha * depthFactor * pulse;
-
-      // Path helper
-      function tracePath() {
-        ctx.beginPath();
-        ctx.moveTo(projected[face[0]].x, projected[face[0]].y);
-        for (let i = 1; i < face.length; i++) {
-          ctx.lineTo(projected[face[i]].x, projected[face[i]].y);
-        }
-        ctx.closePath();
-      }
-
-      // Calculate max distance for gradients
-      let maxDist = 0;
-      for (const vi of face) {
-        const d = Math.sqrt(
-          Math.pow(projected[vi].x - cx, 2) + Math.pow(projected[vi].y - cy, 2)
-        );
-        if (d > maxDist) maxDist = d;
-      }
-
-      // ===== MOBILE: Simplified 2-layer rendering (no shadowBlur) =====
-      if (isMobile) {
-        // LAYER 1: Simple glass fill with gradient
-        const gradient = ctx.createRadialGradient(
-          cx - maxDist * 0.2,
-          cy - maxDist * 0.2,
-          0,
-          cx,
-          cy,
-          maxDist * 1.1
-        );
-        gradient.addColorStop(0, `rgba(${Math.min(255, r + 60)}, ${Math.min(255, g + 60)}, ${Math.min(255, b + 60)}, ${alpha * 0.4})`);
-        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${alpha * 0.2})`);
-        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${alpha * 0.15})`);
-
-        tracePath();
-        ctx.fillStyle = gradient;
-        ctx.fill();
-
-        // LAYER 2: Simple edge stroke (no glow)
-        tracePath();
-        ctx.strokeStyle = `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${alpha * 0.5})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        return;
-      }
-
-      // ===== DESKTOP: Full 4-layer glass rendering =====
-      
-      // LAYER 1: Outer glow
-      tracePath();
-      ctx.save();
-      ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${alpha * 0.9})`;
-      ctx.shadowBlur = 25;
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.08})`;
-      ctx.fill();
-      ctx.restore();
-
-      // LAYER 2: Main glass gradient
-      const gradient = ctx.createRadialGradient(
-        cx - maxDist * 0.3,
-        cy - maxDist * 0.3,
-        0,
-        cx,
-        cy,
-        maxDist * 1.2
-      );
-      gradient.addColorStop(0, `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${alpha * 0.45})`);
-      gradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${alpha * 0.22})`);
-      gradient.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${alpha * 0.15})`);
-      gradient.addColorStop(1, `rgba(${Math.max(0, r - 30)}, ${Math.max(0, g - 30)}, ${Math.max(0, b - 30)}, ${alpha * 0.25})`);
-
-      tracePath();
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      // LAYER 3: Rim glow (edge lighting)
-      tracePath();
-      ctx.save();
-      ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${alpha * 1.8})`;
-      ctx.shadowBlur = 10;
-      ctx.strokeStyle = `rgba(${Math.min(255, r + 100)}, ${Math.min(255, g + 100)}, ${Math.min(255, b + 100)}, ${alpha * 0.65})`;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.restore();
-
-      // LAYER 4: Specular highlight
-      const highlightGrad = ctx.createRadialGradient(
-        cx - maxDist * 0.4,
-        cy - maxDist * 0.4,
-        0,
-        cx - maxDist * 0.4,
-        cy - maxDist * 0.4,
-        maxDist * 0.5
-      );
-      highlightGrad.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.35})`);
-      highlightGrad.addColorStop(0.5, `rgba(255, 255, 255, ${alpha * 0.12})`);
-      highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-      tracePath();
-      ctx.fillStyle = highlightGrad;
-      ctx.fill();
     }
 
     function render(timestamp: number) {
       if (!ctx || !canvas) return;
       if (!startTime) startTime = timestamp;
+      
+      // Mobile: Skip every other frame during heavy 3D transition for smoother feel
+      frameCount++;
       const time = (timestamp - startTime) / 1000;
+      const isTransitioning = time >= 8 && time <= 12;
+      
+      if (isMobile && isTransitioning && frameCount % 2 === 0) {
+        animationId = requestAnimationFrame(render);
+        return;
+      }
+
       const currentTime = time;
 
       ctx.clearRect(0, 0, width, height);
@@ -364,7 +262,7 @@ export default function Tesseract() {
       const colorProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.COLORS));
       const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.TRANSCEND));
 
-      let morph3D = transcendProgress;
+      const morph3D = transcendProgress;
 
       const coreFade = currentTime >= PHASE.TRANSCEND.start ?
         Math.max(0, 1 - (currentTime - PHASE.TRANSCEND.start) / 2) : 1;
@@ -377,6 +275,9 @@ export default function Tesseract() {
         aZW = rotTime * 0.15 + Math.sin(rotTime * 0.25) * 0.3;
         viewAngle += 0.003 * morph3D;
       }
+
+      const cos = Math.cos(viewAngle);
+      const sin = Math.sin(viewAngle);
 
       const projected = vertices4D.map((v) => {
         const logo2D = projectB4(v);
@@ -391,8 +292,6 @@ export default function Tesseract() {
         v4d = rotateZW(v4d, aZW);
         const pos3d = project4Dto3D(v4d);
 
-        const cos = Math.cos(viewAngle);
-        const sin = Math.sin(viewAngle);
         const rx = pos3d.x * cos - pos3d.z * sin;
         const rz = pos3d.x * sin + pos3d.z * cos;
 
@@ -422,12 +321,17 @@ export default function Tesseract() {
       // ========== PHASE 1: ORIGIN POINT ==========
       if (originProgress > 0 && coreProgress < 1) {
         const pointSize = originProgress * 6.4 * (1 - coreProgress);
-        const glowSize = pointSize * 3;
-        const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
-        glow.addColorStop(0, 'rgba(102, 211, 250, 0.8)');
-        glow.addColorStop(1, 'rgba(102, 211, 250, 0)');
-        ctx.fillStyle = glow;
-        ctx.fillRect(centerX - glowSize, centerY - glowSize, glowSize * 2, glowSize * 2);
+        
+        // Mobile: Skip glow, just draw point
+        if (!isMobile) {
+          const glowSize = pointSize * 3;
+          const glow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
+          glow.addColorStop(0, 'rgba(102, 211, 250, 0.8)');
+          glow.addColorStop(1, 'rgba(102, 211, 250, 0)');
+          ctx.fillStyle = glow;
+          ctx.fillRect(centerX - glowSize, centerY - glowSize, glowSize * 2, glowSize * 2);
+        }
+        
         ctx.beginPath();
         ctx.arc(centerX, centerY, pointSize, 0, Math.PI * 2);
         ctx.fillStyle = COLORS.norV;
@@ -437,68 +341,94 @@ export default function Tesseract() {
       // ========== DRAW 2D FACES (fade out during transcendence) ==========
       if (colorProgress > 0 && coreFade > 0) {
         const faceAlpha = 0.25 * colorProgress * coreFade;
+        ctx.globalAlpha = faceAlpha;
+        
         const drawFace = (faces: number[][], col: string) => {
            ctx.fillStyle = col;
-           ctx.globalAlpha = faceAlpha;
-           faces.forEach(face => {
+           for (let f = 0; f < faces.length; f++) {
+              const face = faces[f];
               ctx.beginPath();
               ctx.moveTo(projected[face[0]].x, projected[face[0]].y);
-              face.slice(1).forEach(v => ctx.lineTo(projected[v].x, projected[v].y));
+              for (let v = 1; v < face.length; v++) {
+                ctx.lineTo(projected[face[v]].x, projected[face[v]].y);
+              }
               ctx.closePath();
               ctx.fill();
-           });
-           ctx.globalAlpha = 1;
+           }
         };
+        
         drawFace(norXFaces, COLORS.norX);
         drawFace(norYFaces, COLORS.norY);
         drawFace(norZFaces, COLORS.norZ);
         drawFace(norWFaces, COLORS.norW);
+        ctx.globalAlpha = 1;
       }
 
-      // ========== DRAW 3D GLASS TESSERACT FACES ==========
+      // ========== DRAW 3D TESSERACT FACES ==========
       if (morph3D > 0) {
-        // Sort faces by depth (painter's algorithm - back to front)
-        const sortedFaces = tesseractFaces.map(face => {
-          const avgZ = face.reduce((sum, vi) => sum + projected[vi].z, 0) / 4;
+        // Sort faces by depth
+        const sortedFaces: { idx: number; avgZ: number }[] = [];
+        for (let f = 0; f < tesseractFaces.length; f++) {
+          const face = tesseractFaces[f];
+          const avgZ = (projected[face[0]].z + projected[face[1]].z + projected[face[2]].z + projected[face[3]].z) / 4;
+          sortedFaces.push({ idx: f, avgZ });
+        }
+        sortedFaces.sort((a, b) => a.avgZ - b.avgZ);
 
-          // Calculate face normal for depth-based transparency
-          const p0 = projected[face[0]];
-          const p1 = projected[face[1]];
-          const p2 = projected[face[2]];
+        const baseAlpha = 0.35 * morph3D;
 
-          const v1 = { x: p1.x - p0.x, y: p1.y - p0.y };
-          const v2 = { x: p2.x - p0.x, y: p2.y - p0.y };
-          const zNormal = (v1.x * v2.y - v1.y * v2.x) > 0 ? 1 : -1;
+        for (let s = 0; s < sortedFaces.length; s++) {
+          const { idx } = sortedFaces[s];
+          const face = tesseractFaces[idx];
+          const color = faceColors[idx];
+          const { r, g, b } = hexToRgb(color);
 
-          return {
-            vertices: face,
-            avgZ,
-            color: getTesseractFaceColor(face),
-            zNormal
-          };
-        }).sort((a, b) => a.avgZ - b.avgZ);
+          ctx.beginPath();
+          ctx.moveTo(projected[face[0]].x, projected[face[0]].y);
+          ctx.lineTo(projected[face[1]].x, projected[face[1]].y);
+          ctx.lineTo(projected[face[2]].x, projected[face[2]].y);
+          ctx.lineTo(projected[face[3]].x, projected[face[3]].y);
+          ctx.closePath();
 
-        const baseAlpha = 0.38 * morph3D;
+          // Mobile: Simple solid fill, no gradients
+          if (isMobile) {
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${baseAlpha * 0.4})`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(${r + 50}, ${g + 50}, ${b + 50}, ${baseAlpha * 0.6})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          } else {
+            // Desktop: Gradient fill
+            const cx = (projected[face[0]].x + projected[face[1]].x + projected[face[2]].x + projected[face[3]].x) / 4;
+            const cy = (projected[face[0]].y + projected[face[1]].y + projected[face[2]].y + projected[face[3]].y) / 4;
+            
+            let maxDist = 0;
+            for (let i = 0; i < 4; i++) {
+              const d = Math.sqrt(Math.pow(projected[face[i]].x - cx, 2) + Math.pow(projected[face[i]].y - cy, 2));
+              if (d > maxDist) maxDist = d;
+            }
 
-        // Draw each glass face
-        sortedFaces.forEach(face => {
-          drawGlassFace(
-            face.vertices,
-            projected,
-            face.color,
-            baseAlpha,
-            currentTime,
-            face.zNormal
-          );
-        });
+            const gradient = ctx.createRadialGradient(cx - maxDist * 0.3, cy - maxDist * 0.3, 0, cx, cy, maxDist * 1.2);
+            gradient.addColorStop(0, `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${baseAlpha * 0.45})`);
+            gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${baseAlpha * 0.2})`);
+            gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${baseAlpha * 0.15})`);
+
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            ctx.strokeStyle = `rgba(${Math.min(255, r + 100)}, ${Math.min(255, g + 100)}, ${Math.min(255, b + 100)}, ${baseAlpha * 0.5})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
       }
 
-      // ========== PHASE 2: CORE OCTAGON (fades out during transcendence) ==========
+      // ========== PHASE 2: CORE OCTAGON ==========
       if (coreProgress > 0 && coreFade > 0 && octagonPoints.length >= 3) {
         const cx = octagonPoints.reduce((sum, p) => sum + p.x, 0) / octagonPoints.length;
         const cy = octagonPoints.reduce((sum, p) => sum + p.y, 0) / octagonPoints.length;
         
-        // Mobile: 5% smaller octagon (0.75 * 0.95 = 0.7125)
+        // Mobile: 5% smaller
         const scaleFactor = isMobile ? 0.7125 : 0.75;
         const coreSize = coreProgress;
 
@@ -511,38 +441,55 @@ export default function Tesseract() {
             return { x: cx + (dx / dist) * newDist, y: cy + (dy / dist) * newDist };
           });
 
-          let maxDist = 0;
-          for (const p of innerOctagon) {
-            const d = Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2);
-            if (d > maxDist) maxDist = d;
-          }
-
-          const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxDist);
-          gradient.addColorStop(0, COLORS.norV);
-          gradient.addColorStop(1, COLORS.norVDark);
-
           ctx.globalAlpha = coreFade;
           ctx.beginPath();
           ctx.moveTo(innerOctagon[0].x, innerOctagon[0].y);
-          innerOctagon.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+          for (let i = 1; i < innerOctagon.length; i++) {
+            ctx.lineTo(innerOctagon[i].x, innerOctagon[i].y);
+          }
           ctx.closePath();
-          ctx.fillStyle = gradient; ctx.fill();
-          ctx.strokeStyle = COLORS.norV; ctx.lineWidth = 3; ctx.stroke();
+
+          // Mobile: Solid fill, no gradient
+          if (isMobile) {
+            ctx.fillStyle = COLORS.norV;
+          } else {
+            let maxDist = 0;
+            for (let i = 0; i < innerOctagon.length; i++) {
+              const d = Math.sqrt((innerOctagon[i].x - cx) ** 2 + (innerOctagon[i].y - cy) ** 2);
+              if (d > maxDist) maxDist = d;
+            }
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxDist);
+            gradient.addColorStop(0, COLORS.norV);
+            gradient.addColorStop(1, COLORS.norVDark);
+            ctx.fillStyle = gradient;
+          }
+          
+          ctx.fill();
+          ctx.strokeStyle = COLORS.norV;
+          ctx.lineWidth = isMobile ? 2 : 3;
+          ctx.stroke();
           ctx.globalAlpha = 1;
         }
       }
 
       // ========== PHASE 3: STRUCTURE (EDGES) ==========
       if (structureProgress > 0) {
-        const sortedEdges = edges.map(([i, j]) => ({
-          i, j, z: (projected[i].z + projected[j].z) / 2
-        })).sort((a, b) => a.z - b.z);
+        // Sort edges by z
+        const sortedEdges: { i: number; j: number; z: number }[] = [];
+        for (let e = 0; e < edges.length; e++) {
+          const [i, j] = edges[e];
+          sortedEdges.push({ i, j, z: (projected[i].z + projected[j].z) / 2 });
+        }
+        sortedEdges.sort((a, b) => a.z - b.z);
 
-        sortedEdges.forEach(({ i, j }) => {
+        const scaleD = scale * 0.6;
+        
+        for (let e = 0; e < sortedEdges.length; e++) {
+          const { i, j } = sortedEdges[e];
           const midX = (projected[i].x + projected[j].x) / 2;
           const midY = (projected[i].y + projected[j].y) / 2;
           const dist = Math.sqrt((midX - centerX)**2 + (midY - centerY)**2);
-          const delay = (dist / (scale * 0.6)) * 0.7;
+          const delay = (dist / scaleD) * 0.7;
           const prog = Math.max(0, Math.min(1, (structureProgress - delay) / (1 - delay)));
 
           if (prog > 0) {
@@ -553,63 +500,57 @@ export default function Tesseract() {
             const endX = lerp(centerX, projected[j].x, prog);
             const endY = lerp(centerY, projected[j].y, prog);
 
-            // Add glow to edges in 3D mode (desktop only for performance)
-            if (morph3D > 0 && !isMobile) {
-              const rgb = hexToRgb(col);
-              ctx.save();
-              ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.5 * morph3D})`;
-              ctx.shadowBlur = 6;
-              ctx.beginPath();
-              ctx.moveTo(startX, startY);
-              ctx.lineTo(endX, endY);
-              ctx.strokeStyle = col;
-              ctx.lineWidth = 1.2;
-              ctx.stroke();
-              ctx.restore();
-            } else {
-              ctx.beginPath();
-              ctx.moveTo(startX, startY);
-              ctx.lineTo(endX, endY);
-              ctx.strokeStyle = col;
-              ctx.lineWidth = isMobile ? 1.0 : 0.8;
-              ctx.stroke();
-            }
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = col;
+            ctx.lineWidth = isMobile ? 0.8 : (morph3D > 0 ? 1.2 : 0.8);
+            ctx.stroke();
           }
-        });
+        }
 
-        // ========== VERTICES WITH GLOW ==========
-        // FIX: All dots use #66d3fa color, opacity reduced by 5%
-        const sortedVerts = projected.map((p, i) => ({ ...p, i })).sort((a, b) => a.z - b.z);
-        sortedVerts.forEach(({ x, y, i }) => {
+        // ========== VERTICES ==========
+        const sortedVerts: { x: number; y: number; i: number; z: number }[] = [];
+        for (let v = 0; v < projected.length; v++) {
+          sortedVerts.push({ x: projected[v].x, y: projected[v].y, z: projected[v].z, i: v });
+        }
+        sortedVerts.sort((a, b) => a.z - b.z);
+
+        for (let v = 0; v < sortedVerts.length; v++) {
+          const { x, y } = sortedVerts[v];
           const dist = Math.sqrt((x - centerX)**2 + (y - centerY)**2);
-          const delay = (dist / (scale * 0.6)) * 0.5;
+          const delay = (dist / scaleD) * 0.5;
           const prog = Math.max(0, Math.min(1, (structureProgress - delay) / (1 - delay)));
 
           if (prog > 0) {
-            // Always use #66d3fa (COLORS.norV) for all vertices
-            const col = COLORS.norV;
-            const radius = (morph3D > 0 ? 3.5 : 2.5) * prog;
-            const glowR = radius * 3;
+            const radius = (morph3D > 0 ? 3 : 2.5) * prog;
 
-            const rgb = hexToRgb(col);
-            
-            // Reduced opacity by 5%: 0.7 -> 0.65, 0.25 -> 0.20
-            const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowR);
-            glow.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.65)`);
-            glow.addColorStop(0.5, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)`);
-            glow.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+            // Mobile: Just solid dot, no glow
+            if (isMobile) {
+              ctx.beginPath();
+              ctx.arc(x, y, radius, 0, Math.PI * 2);
+              ctx.fillStyle = COLORS.norV;
+              ctx.fill();
+            } else {
+              // Desktop: Glow + dot
+              const glowR = radius * 3;
+              const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowR);
+              glow.addColorStop(0, 'rgba(102, 211, 250, 0.65)');
+              glow.addColorStop(0.5, 'rgba(102, 211, 250, 0.20)');
+              glow.addColorStop(1, 'rgba(102, 211, 250, 0)');
 
-            ctx.beginPath();
-            ctx.arc(x, y, glowR, 0, Math.PI * 2);
-            ctx.fillStyle = glow;
-            ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x, y, glowR, 0, Math.PI * 2);
+              ctx.fillStyle = glow;
+              ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.fillStyle = col;
-            ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x, y, radius, 0, Math.PI * 2);
+              ctx.fillStyle = COLORS.norV;
+              ctx.fill();
+            }
           }
-        });
+        }
       }
 
       animationId = requestAnimationFrame(render);
