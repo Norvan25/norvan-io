@@ -10,10 +10,17 @@ const TEXT_DURATION = 3;
 
 export default function IntelligenceText() {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const spansRef = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
+    // Cache span references once on mount
+    if (wrapperRef.current) {
+      spansRef.current = Array.from(wrapperRef.current.querySelectorAll('span[data-char]')) as HTMLSpanElement[];
+    }
+
     let startTime: number | null = null;
     let animId: number;
+    let lastProgress = -1;
 
     function getCharColor(index: number, progress: number) {
       const charNorm = index / CHARS.length;
@@ -60,18 +67,31 @@ export default function IntelligenceText() {
       }
 
       if (wrapperRef.current) {
-        wrapperRef.current.style.opacity = progress > 0 ? String(Math.min(1, progress * 2)) : '0';
+        // Only update opacity when progress changes significantly
+        const newOpacity = progress > 0 ? String(Math.min(1, progress * 2)) : '0';
+        if (wrapperRef.current.style.opacity !== newOpacity) {
+          wrapperRef.current.style.opacity = newOpacity;
+        }
 
-        if (progress > 0) {
-          const allSpans = wrapperRef.current.querySelectorAll('span[id^="char-"]');
-          for(let i=0; i<allSpans.length; i++) {
-            const span = allSpans[i] as HTMLElement;
-            const charIndex = parseInt(span.id.split('-')[1]);
-            span.style.color = getCharColor(charIndex, progress);
-            span.style.textShadow = getCharGlow(charIndex, progress, time);
+        // Only update spans when progress has changed enough (reduces work)
+        if (progress > 0 && Math.abs(progress - lastProgress) > 0.005) {
+          lastProgress = progress;
+          
+          // Use cached spans instead of querySelectorAll
+          for (let i = 0; i < spansRef.current.length; i++) {
+            const span = spansRef.current[i];
+            span.style.color = getCharColor(i, progress);
+            span.style.textShadow = getCharGlow(i, progress, time);
+          }
+        } else if (progress >= 1) {
+          // After animation complete, only update glow for breathing effect
+          for (let i = 0; i < spansRef.current.length; i++) {
+            const span = spansRef.current[i];
+            span.style.textShadow = getCharGlow(i, progress, time);
           }
         }
       }
+      
       animId = requestAnimationFrame(animate);
     }
 
@@ -91,7 +111,14 @@ export default function IntelligenceText() {
         style={{ fontSize: 'clamp(1.0rem, 4.5vw, 2.5rem)' }}
       >
         {CHARS.map((char, i) => (
-          <span key={i} id={`char-${i}`} className="transition-colors duration-100" style={{ minWidth: char === ' ' ? '0.3em' : 'auto' }}>
+          <span 
+            key={i} 
+            data-char={i}
+            style={{ 
+              minWidth: char === ' ' ? '0.3em' : 'auto',
+              willChange: 'color, text-shadow'
+            }}
+          >
             {char}
           </span>
         ))}
