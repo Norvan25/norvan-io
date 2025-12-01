@@ -222,7 +222,31 @@ export default function Tesseract() {
       return targetColor;
     }
 
-    // Glass face rendering
+    // SIMPLE face rendering for transition phase
+    function drawSimpleFace(
+      face: number[],
+      projected: { x: number; y: number; z: number }[],
+      color: string,
+      alpha: number
+    ) {
+      const { r, g, b } = hexToRgb(color);
+      
+      ctx.beginPath();
+      ctx.moveTo(projected[face[0]].x, projected[face[0]].y);
+      for (let i = 1; i < face.length; i++) {
+        ctx.lineTo(projected[face[i]].x, projected[face[i]].y);
+      }
+      ctx.closePath();
+      
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.3})`;
+      ctx.fill();
+      
+      ctx.strokeStyle = `rgba(${r + 50}, ${g + 50}, ${b + 50}, ${alpha * 0.5})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+
+    // FULL glass face rendering for after transition
     function drawGlassFace(
       face: number[],
       projected: { x: number; y: number; z: number }[],
@@ -326,7 +350,11 @@ export default function Tesseract() {
       const colorProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.COLORS));
       const transcendProgress = easeInOutSine(getPhaseProgress(currentTime, PHASE.TRANSCEND));
 
-      let morph3D = transcendProgress;
+      const morph3D = transcendProgress;
+      
+      // Glass effect ramps up AFTER transition completes
+      // 0 during transition, ramps to 1 over 2 seconds after morph3D hits 1
+      const glassIntensity = morph3D >= 1 ? Math.min(1, (currentTime - 12) / 2) : 0;
 
       const coreFade = currentTime >= PHASE.TRANSCEND.start ?
         Math.max(0, 1 - (currentTime - PHASE.TRANSCEND.start) / 2) : 1;
@@ -417,7 +445,7 @@ export default function Tesseract() {
         drawFace(norWFaces, COLORS.norW);
       }
 
-      // DRAW 3D GLASS TESSERACT FACES
+      // DRAW 3D TESSERACT FACES
       if (morph3D > 0) {
         const sortedFaces = tesseractFaces.map(face => {
           const avgZ = face.reduce((sum, vi) => sum + projected[vi].z, 0) / 4;
@@ -439,14 +467,25 @@ export default function Tesseract() {
         const baseAlpha = 0.38 * morph3D;
 
         sortedFaces.forEach(face => {
-          drawGlassFace(
-            face.vertices,
-            projected,
-            face.color,
-            baseAlpha,
-            currentTime,
-            face.zNormal
-          );
+          if (glassIntensity > 0.5) {
+            // Full glass effect after transition
+            drawGlassFace(
+              face.vertices,
+              projected,
+              face.color,
+              baseAlpha,
+              currentTime,
+              face.zNormal
+            );
+          } else {
+            // Simple rendering during transition
+            drawSimpleFace(
+              face.vertices,
+              projected,
+              face.color,
+              baseAlpha
+            );
+          }
         });
       }
 
@@ -510,10 +549,11 @@ export default function Tesseract() {
             const endX = lerp(centerX, projected[j].x, prog);
             const endY = lerp(centerY, projected[j].y, prog);
 
-            if (morph3D > 0) {
+            // Only add glow after transition complete
+            if (glassIntensity > 0.5) {
               const rgb = hexToRgb(col);
               ctx.save();
-              ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${0.5 * morph3D})`;
+              ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
               ctx.shadowBlur = 6;
               ctx.beginPath();
               ctx.moveTo(startX, startY);
@@ -543,20 +583,22 @@ export default function Tesseract() {
           if (prog > 0) {
             const col = COLORS.norV;
             const radius = (morph3D > 0 ? 3.5 : 2.5) * prog;
-            const glowR = radius * 3;
 
-            const rgb = hexToRgb(col);
-            
-            // Opacity reduced by 5%
-            const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowR);
-            glow.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.65)`);
-            glow.addColorStop(0.5, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)`);
-            glow.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+            // Simple dot during transition, glow after
+            if (glassIntensity > 0.5) {
+              const glowR = radius * 3;
+              const rgb = hexToRgb(col);
+              
+              const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowR);
+              glow.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.65)`);
+              glow.addColorStop(0.5, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)`);
+              glow.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
 
-            ctx.beginPath();
-            ctx.arc(x, y, glowR, 0, Math.PI * 2);
-            ctx.fillStyle = glow;
-            ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x, y, glowR, 0, Math.PI * 2);
+              ctx.fillStyle = glow;
+              ctx.fill();
+            }
 
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
