@@ -1,16 +1,75 @@
-import StarField from "../StarField";
+import { useState } from 'react';
+import { Mic, MessageSquareCode, CalendarCheck } from 'lucide-react';
+import { useNorVoice } from '../../hooks/useNorVoice';
 
 export default function Overlay() {
+  const { toggleVoice, isSessionActive, isLoading } = useNorVoice();
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleBooking = () => {
+    window.open('https://calendly.com/emil-petrosyan-norvan/30min', '_blank');
+  };
+
+  const getVoiceButtonText = () => {
+    if (isLoading) return 'CONNECTING...';
+    if (isSessionActive) return 'END UPLINK';
+    if (isHovering) return 'GIVE IT A TRY';
+    return 'TALK TO NEXUS';
+  };
+
   return (
-    <div className="absolute inset-0 pointer-events-none flex flex-col justify-end p-6 md:p-12">
+    <div className="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none">
 
-      <div className="absolute inset-0 pointer-events-none">
-        <StarField />
-      </div>
+      <div className="h-20" />
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-40 pointer-events-none opacity-60">
-        <span className="text-[9px] tracking-[0.3em] text-[#00A6FB]">SCROLL</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-[#00A6FB] to-transparent animate-pulse" />
+      <div className="flex-1"></div>
+
+      <div className="relative w-full pb-16 md:pb-24 pointer-events-auto">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-center md:justify-start flex-wrap gap-4 md:gap-6">
+
+            <button
+              onClick={toggleVoice}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              disabled={isLoading}
+              className={`group relative flex items-center justify-center gap-2 px-8 py-3 rounded-full transition-all duration-300 border
+                ${isLoading
+                   ? 'border-yellow-500 bg-yellow-500/10 text-yellow-400 cursor-wait'
+                   : isSessionActive
+                     ? 'border-red-500 bg-red-500/10 text-red-400 hover:bg-red-500/20'
+                     : 'bg-white/5 border-white/20 hover:border-[#00A6FB] hover:bg-[#00A6FB]/10 text-white'
+                }
+                shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(0,166,251,0.2)]
+              `}
+            >
+              <Mic className={`w-5 h-5 transition-transform ${isSessionActive ? 'animate-pulse text-red-400' : 'text-[#00A6FB] group-hover:text-white'}`} />
+              <span className="text-sm font-mono font-bold tracking-wider whitespace-nowrap">
+                {getVoiceButtonText()}
+              </span>
+            </button>
+
+            <button
+              className="group relative flex items-center justify-center gap-2 px-8 py-3 rounded-full transition-all duration-300 border border-white/20 bg-white/5 hover:border-[#009E60] hover:bg-[#009E60]/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(0,158,96,0.2)]"
+            >
+              <MessageSquareCode className="w-5 h-5 text-[#009E60] group-hover:text-white" />
+              <span className="text-sm font-mono font-bold tracking-wider whitespace-nowrap">
+                CHAT WITH NEXUS
+              </span>
+            </button>
+
+            <button
+              onClick={handleBooking}
+              className="group relative flex items-center justify-center gap-2 px-8 py-3 rounded-full transition-all duration-300 border border-[#F28500] bg-[#F28500]/20 text-white shadow-[0_0_25px_rgba(242,133,0,0.3)] hover:shadow-[0_0_35px_rgba(242,133,0,0.6)]"
+            >
+              <CalendarCheck className="w-5 h-5 text-white" />
+              <span className="text-sm font-mono font-bold tracking-wider whitespace-nowrap">
+                BOOK A BRIEFING
+              </span>
+            </button>
+
+          </div>
+        </div>
       </div>
     </div>
   );
