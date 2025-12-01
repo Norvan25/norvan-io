@@ -40,13 +40,13 @@ const MetricCard = ({ value, unit, label, icon: Icon, color, index }: typeof met
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.15 }}
       viewport={{ once: true, margin: "-100px" }}
-      className="p-6 md:p-8 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 flex flex-col items-center text-center gap-4 group cursor-default relative overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+      className="p-8 rounded-xl bg-black/40 backdrop-blur-lg border border-white/10 flex flex-col items-center text-center gap-4 group cursor-default relative overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:border-[#00A6FB]/30 transition-all duration-300"
     >
       <div className="w-16 h-16 rounded-full flex items-center justify-center bg-white/5 shadow-inner" style={{ color: color }}>
-        <Icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
+        <Icon className="w-8 h-8 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
       </div>
 
-      <h3 className="text-5xl md:text-6xl font-extrabold text-white tracking-tight">
+      <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight">
         <CountUp
           end={value}
           duration={3}
