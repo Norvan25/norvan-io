@@ -3,6 +3,7 @@ import Tesseract from './components/3d/Tesseract';
 import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
 import Header from './components/UI/Header';
+import IntelligencePortfolio from './components/Sections/IntelligencePortfolio';
 import DimensionSection from './components/Sections/DimensionSection';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
@@ -111,6 +112,8 @@ function App() {
         </div>
 
         <div className="relative w-full z-10 border-t border-white/10">
+          <IntelligencePortfolio />
+
           {DIMENSIONS.map((dim, i) => (
             <DimensionSection key={dim.id} index={i} {...dim} />
           ))}
