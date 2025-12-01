@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Tesseract from './components/3d/Tesseract';
 import IntelligenceText from './components/IntelligenceText';
 import Overlay from './components/UI/Overlay';
@@ -79,17 +79,39 @@ const DIMENSIONS = [
 ];
 
 function App() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const meshRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let rafId: number;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1
-      });
+      targetX = (e.clientX / window.innerWidth) * 2 - 1;
+      targetY = (e.clientY / window.innerHeight) * 2 - 1;
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    const animate = () => {
+      // Smooth interpolation (no React re-render)
+      currentX += (targetX - currentX) * 0.05;
+      currentY += (targetY - currentY) * 0.05;
+
+      if (meshRef.current) {
+        meshRef.current.style.transform = `translate(${currentX * -15}px, ${currentY * -15}px) scale(1.05)`;
+      }
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
@@ -99,12 +121,13 @@ function App() {
 
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
+          ref={meshRef}
           className="absolute inset-0 opacity-70"
           style={{
             backgroundImage: "url('/background-mesh.png')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            transform: `translate(${mousePos.x * -15}px, ${mousePos.y * -15}px) scale(1.05)`
+            willChange: 'transform'
           }}
         />
 
