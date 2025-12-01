@@ -7,6 +7,7 @@ import IntelligencePortfolio from './components/Sections/IntelligencePortfolio';
 import IndustryEcosystem from './components/Sections/IndustryEcosystem';
 import PerformanceMatrix from './components/Sections/PerformanceMatrix';
 import DimensionSection from './components/Sections/DimensionSection';
+import Testimonials from './components/Sections/Testimonials';
 import Footer from './components/Sections/Footer';
 import StarField from './components/StarField';
 import GlobalCommandArray from './components/UI/GlobalCommandArray';
@@ -123,6 +124,8 @@ function App() {
           <IndustryEcosystem />
 
           <PerformanceMatrix />
+
+          <Testimonials />
 
           <Footer />
         </div>
