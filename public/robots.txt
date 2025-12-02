@@ -1,4 +1,13 @@
+# robots.txt for norvan.io
+# https://norvan.io
+
 User-agent: *
 Allow: /
 
+# Sitemap location
 Sitemap: https://norvan.io/sitemap.xml
+
+# Block development/build files
+Disallow: /src/
+Disallow: /.git/
+Disallow: /node_modules/
