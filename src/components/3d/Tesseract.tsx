@@ -104,13 +104,6 @@ export default function Tesseract() {
       }
     }
 
-    const norXVertices = [3, 2, 6, 7, 11, 10, 14, 15];
-    const norXVertices2 = [13, 12, 8, 9, 4, 5, 1, 2];
-    const norYVertices = [4, 12, 14, 6, 7, 15, 13, 5];
-    const norZVertices = [11, 15, 14, 10, 9, 8, 12, 13];
-    const norWVertices = [1, 9, 11, 3];
-    const norWVertices2 = [5, 13, 15, 7];
-
     const norXFaces = [[2, 6, 7, 3], [0, 1, 5, 4]];
     const norYFaces = [[4, 12, 14, 6], [5, 13, 15, 7]];
     const norZFaces = [[11, 15, 14, 10], [9, 8, 12, 13]];
@@ -153,8 +146,20 @@ export default function Tesseract() {
       return COLORS.norX;
     }
 
-    const norXEdges = [[8,0], [4,0], [0,1]];
-    const norWEdgesOpacity = [[0,2]];
+    // Get edge color based on which axis it belongs to
+    function getEdgeColor(i: number, j: number): string {
+      const v1 = vertices4D[i];
+      const v2 = vertices4D[j];
+      for (let c = 0; c < 4; c++) {
+        if (v1[c] !== v2[c]) {
+          if (c === 0) return COLORS.norY;  // X-axis edges = Purple
+          if (c === 1) return COLORS.norZ;  // Y-axis edges = Orange
+          if (c === 2) return COLORS.norW;  // Z-axis edges = Green
+          if (c === 3) return COLORS.norX;  // W-axis edges = Blue
+        }
+      }
+      return COLORS.edge;
+    }
 
     const PHASE = {
       ORIGIN: { start: 0, end: 1 },
@@ -187,66 +192,7 @@ export default function Tesseract() {
       return { x: x1 + t*(x2-x1), y: y1 + t*(y2-y1) };
     }
 
-    function getEdgeColor(i: number, j: number, colorProgress: number, use3DColors = false) {
-      if (use3DColors) {
-        const v1 = vertices4D[i];
-        const v2 = vertices4D[j];
-        for (let c = 0; c < 4; c++) {
-          if (v1[c] !== v2[c]) {
-            if (c === 3) return COLORS.norX;
-            if (c === 0) return COLORS.norY;
-            if (c === 1) return COLORS.norZ;
-            if (c === 2) return COLORS.norW;
-          }
-        }
-      }
-
-      const isNorX = norXVertices.includes(i) && norXVertices.includes(j);
-      const isNorX2 = norXVertices2.includes(i) && norXVertices2.includes(j);
-      const isNorXEdge = norXEdges.some(([a,b]) => (i===a && j===b) || (i===b && j===a));
-      const isNorY = norYVertices.includes(i) && norYVertices.includes(j);
-      const isNorZ = norZVertices.includes(i) && norZVertices.includes(j);
-      const isNorW = norWVertices.includes(i) && norWVertices.includes(j);
-      const isNorW2 = norWVertices2.includes(i) && norWVertices2.includes(j);
-      const isNorWEdge = norWEdgesOpacity.some(([a,b]) => (i===a && j===b) || (i===b && j===a));
-
-      let targetColor = COLORS.edge;
-      if (isNorX || isNorX2 || isNorXEdge) targetColor = COLORS.norX;
-      else if (isNorY) targetColor = COLORS.norY;
-      else if (isNorZ) targetColor = COLORS.norZ;
-      else if (isNorW || isNorW2 || isNorWEdge) targetColor = COLORS.norW;
-
-      if (colorProgress <= 0) return COLORS.edge;
-      if (colorProgress >= 1) return targetColor;
-
-      return targetColor;
-    }
-
-    // SIMPLE face rendering for transition phase
-    function drawSimpleFace(
-      face: number[],
-      projected: { x: number; y: number; z: number }[],
-      color: string,
-      alpha: number
-    ) {
-      const { r, g, b } = hexToRgb(color);
-      
-      ctx.beginPath();
-      ctx.moveTo(projected[face[0]].x, projected[face[0]].y);
-      for (let i = 1; i < face.length; i++) {
-        ctx.lineTo(projected[face[i]].x, projected[face[i]].y);
-      }
-      ctx.closePath();
-      
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.3})`;
-      ctx.fill();
-      
-      ctx.strokeStyle = `rgba(${r + 50}, ${g + 50}, ${b + 50}, ${alpha * 0.5})`;
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-    }
-
-    // FULL glass face rendering for after transition
+    // Draw glass-effect face with gradient, glow, and reflection
     function drawGlassFace(
       face: number[],
       projected: { x: number; y: number; z: number }[],
@@ -299,41 +245,65 @@ export default function Tesseract() {
         cy,
         maxDist * 1.2
       );
-      gradient.addColorStop(0, `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${alpha * 0.45})`);
-      gradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${alpha * 0.22})`);
-      gradient.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${alpha * 0.15})`);
-      gradient.addColorStop(1, `rgba(${Math.max(0, r - 30)}, ${Math.max(0, g - 30)}, ${Math.max(0, b - 30)}, ${alpha * 0.25})`);
+      gradient.addColorStop(0, `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${alpha * 0.5})`);
+      gradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${alpha * 0.35})`);
+      gradient.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${alpha * 0.25})`);
+      gradient.addColorStop(1, `rgba(${Math.max(0, r - 30)}, ${Math.max(0, g - 30)}, ${Math.max(0, b - 30)}, ${alpha * 0.3})`);
 
       tracePath();
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      // LAYER 3: Rim glow
+      // LAYER 3: Rim glow / edge highlight
       tracePath();
       ctx.save();
-      ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${alpha * 1.8})`;
-      ctx.shadowBlur = 10;
-      ctx.strokeStyle = `rgba(${Math.min(255, r + 100)}, ${Math.min(255, g + 100)}, ${Math.min(255, b + 100)}, ${alpha * 0.65})`;
-      ctx.lineWidth = 1.5;
+      ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${alpha * 2})`;
+      ctx.shadowBlur = 12;
+      ctx.strokeStyle = `rgba(${Math.min(255, r + 100)}, ${Math.min(255, g + 100)}, ${Math.min(255, b + 100)}, ${alpha * 0.7})`;
+      ctx.lineWidth = 1.8;
       ctx.stroke();
       ctx.restore();
 
-      // LAYER 4: Specular highlight
+      // LAYER 4: Specular highlight (glass reflection)
       const highlightGrad = ctx.createRadialGradient(
         cx - maxDist * 0.4,
         cy - maxDist * 0.4,
         0,
         cx - maxDist * 0.4,
         cy - maxDist * 0.4,
-        maxDist * 0.5
+        maxDist * 0.6
       );
-      highlightGrad.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.35})`);
-      highlightGrad.addColorStop(0.5, `rgba(255, 255, 255, ${alpha * 0.12})`);
+      highlightGrad.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.4})`);
+      highlightGrad.addColorStop(0.5, `rgba(255, 255, 255, ${alpha * 0.15})`);
       highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
       tracePath();
       ctx.fillStyle = highlightGrad;
       ctx.fill();
+    }
+
+    // Simple face rendering for transition phase
+    function drawSimpleFace(
+      face: number[],
+      projected: { x: number; y: number; z: number }[],
+      color: string,
+      alpha: number
+    ) {
+      const { r, g, b } = hexToRgb(color);
+      
+      ctx.beginPath();
+      ctx.moveTo(projected[face[0]].x, projected[face[0]].y);
+      for (let i = 1; i < face.length; i++) {
+        ctx.lineTo(projected[face[i]].x, projected[face[i]].y);
+      }
+      ctx.closePath();
+      
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.35})`;
+      ctx.fill();
+      
+      ctx.strokeStyle = `rgba(${Math.min(255, r + 60)}, ${Math.min(255, g + 60)}, ${Math.min(255, b + 60)}, ${alpha * 0.6})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
 
     function render(timestamp: number) {
@@ -352,16 +322,16 @@ export default function Tesseract() {
 
       const morph3D = transcendProgress;
       
-      // Glass effect ramps up AFTER transition completes
-      // 0 during transition, ramps to 1 over 2 seconds after morph3D hits 1
+      // Glass effect intensity - ramps up AFTER morph completes
       const glassIntensity = morph3D >= 1 ? Math.min(1, (currentTime - 12) / 2) : 0;
 
       const coreFade = currentTime >= PHASE.TRANSCEND.start ?
         Math.max(0, 1 - (currentTime - PHASE.TRANSCEND.start) / 2) : 1;
 
+      // FIX: Only start rotation AFTER morph is complete
       let aXW = 0, aYW = 0, aZW = 0;
-      if (currentTime >= PHASE.TRANSCEND.start) {
-        const rotTime = currentTime - PHASE.TRANSCEND.start;
+      if (morph3D >= 1) {
+        const rotTime = currentTime - PHASE.TRANSCEND.end;
         aXW = rotTime * 0.3 + Math.sin(rotTime * 0.2) * 0.5;
         aYW = rotTime * 0.2 + Math.cos(rotTime * 0.15) * 0.4;
         aZW = rotTime * 0.15 + Math.sin(rotTime * 0.25) * 0.3;
@@ -424,7 +394,7 @@ export default function Tesseract() {
         ctx.fill();
       }
 
-      // DRAW 2D FACES
+      // DRAW 2D FACES (during flat logo phase)
       if (colorProgress > 0 && coreFade > 0) {
         const faceAlpha = 0.25 * colorProgress * coreFade;
         const drawFace = (faces: number[][], col: string) => {
@@ -445,7 +415,7 @@ export default function Tesseract() {
         drawFace(norWFaces, COLORS.norW);
       }
 
-      // DRAW 3D TESSERACT FACES
+      // DRAW 3D TESSERACT FACES with glass effect
       if (morph3D > 0) {
         const sortedFaces = tesseractFaces.map(face => {
           const avgZ = face.reduce((sum, vi) => sum + projected[vi].z, 0) / 4;
@@ -464,7 +434,7 @@ export default function Tesseract() {
           };
         }).sort((a, b) => a.avgZ - b.avgZ);
 
-        const baseAlpha = 0.38 * morph3D;
+        const baseAlpha = 0.42 * morph3D;
 
         sortedFaces.forEach(face => {
           if (glassIntensity > 0.5) {
@@ -528,7 +498,7 @@ export default function Tesseract() {
         }
       }
 
-      // PHASE 3: STRUCTURE (EDGES)
+      // PHASE 3: STRUCTURE (EDGES) - Now with colors!
       if (structureProgress > 0) {
         const sortedEdges = edges.map(([i, j]) => ({
           i, j, z: (projected[i].z + projected[j].z) / 2
@@ -542,67 +512,71 @@ export default function Tesseract() {
           const prog = Math.max(0, Math.min(1, (structureProgress - delay) / (1 - delay)));
 
           if (prog > 0) {
-            const use3D = morph3D >= 1;
-            const col = getEdgeColor(i, j, colorProgress, use3D);
+            // Get dimensional color for this edge
+            const edgeColor = colorProgress > 0.5 ? getEdgeColor(i, j) : COLORS.edge;
+            const { r, g, b } = hexToRgb(edgeColor);
+            
             const startX = lerp(centerX, projected[i].x, prog);
             const startY = lerp(centerY, projected[i].y, prog);
             const endX = lerp(centerX, projected[j].x, prog);
             const endY = lerp(centerY, projected[j].y, prog);
 
-            // Only add glow after transition complete
-            if (glassIntensity > 0.5) {
-              const rgb = hexToRgb(col);
+            // Edge glow effect
+            if (glassIntensity > 0.3 || colorProgress > 0.5) {
               ctx.save();
-              ctx.shadowColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`;
-              ctx.shadowBlur = 6;
+              ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
+              ctx.shadowBlur = 8;
               ctx.beginPath();
               ctx.moveTo(startX, startY);
               ctx.lineTo(endX, endY);
-              ctx.strokeStyle = col;
-              ctx.lineWidth = 1.2;
+              ctx.strokeStyle = edgeColor;
+              ctx.lineWidth = 1.5;
               ctx.stroke();
               ctx.restore();
             } else {
               ctx.beginPath();
               ctx.moveTo(startX, startY);
               ctx.lineTo(endX, endY);
-              ctx.strokeStyle = col;
-              ctx.lineWidth = 0.8;
+              ctx.strokeStyle = edgeColor;
+              ctx.lineWidth = 1;
               ctx.stroke();
             }
           }
         });
 
-        // VERTICES - All #66d3fa, opacity reduced by 5%
+        // VERTICES with outer glow
         const sortedVerts = projected.map((p, i) => ({ ...p, i })).sort((a, b) => a.z - b.z);
-        sortedVerts.forEach(({ x, y, i }) => {
+        sortedVerts.forEach(({ x, y }) => {
           const dist = Math.sqrt((x - centerX)**2 + (y - centerY)**2);
           const delay = (dist / (scale * 0.6)) * 0.5;
           const prog = Math.max(0, Math.min(1, (structureProgress - delay) / (1 - delay)));
 
           if (prog > 0) {
-            const col = COLORS.norV;
             const radius = (morph3D > 0 ? 3.5 : 2.5) * prog;
+            const glowRadius = radius * 4;
 
-            // Simple dot during transition, glow after
-            if (glassIntensity > 0.5) {
-              const glowR = radius * 3;
-              const rgb = hexToRgb(col);
-              
-              const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowR);
-              glow.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.65)`);
-              glow.addColorStop(0.5, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.20)`);
-              glow.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
-
-              ctx.beginPath();
-              ctx.arc(x, y, glowR, 0, Math.PI * 2);
-              ctx.fillStyle = glow;
-              ctx.fill();
-            }
+            // Outer glow
+            const glow = ctx.createRadialGradient(x, y, radius * 0.5, x, y, glowRadius);
+            glow.addColorStop(0, 'rgba(102, 211, 250, 0.7)');
+            glow.addColorStop(0.4, 'rgba(102, 211, 250, 0.3)');
+            glow.addColorStop(0.7, 'rgba(102, 211, 250, 0.1)');
+            glow.addColorStop(1, 'rgba(102, 211, 250, 0)');
 
             ctx.beginPath();
+            ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+            ctx.fillStyle = glow;
+            ctx.fill();
+
+            // Core dot
+            ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.fillStyle = col;
+            ctx.fillStyle = COLORS.norV;
+            ctx.fill();
+
+            // Bright center highlight
+            ctx.beginPath();
+            ctx.arc(x, y, radius * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.fill();
           }
         });
