@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Vapi from '@vapi-ai/web';
 
-const VAPI_PUBLIC_KEY = '2e09fd87-d7f6-4526-a6ee-93b02a692dd0';
+const VAPI_PUBLIC_KEY = '531a385e-75af-4cb3-b06f-946d2500b009';
 const ASSISTANT_ID = 'cb741d7a-79c5-499c-9405-275612dad372';
 
 let vapiInstance: any = null;
